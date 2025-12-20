@@ -2,7 +2,7 @@
 	"name": "api",
 	"type": "module",
 	"scripts": {
-		"start": "bun run src/main.ts",
+		"dev": "bun run src/index.ts",
 		"typecheck": "tsc"
 	},
 	"devDependencies": {

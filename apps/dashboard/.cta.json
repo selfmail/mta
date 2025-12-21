@@ -10,7 +10,10 @@
   "framework": "react-cra",
   "chosenAddOns": [
     "biome",
-    "nitro",
-    "start"
+    "tanstack-query",
+    "form",
+    "compiler",
+    "shadcn",
+    "store"
   ]
 }

@@ -4,12 +4,16 @@
 	"type": "module",
 	"private": true,
 	"devDependencies": {
-		"@types/bun": "latest"
+		"@types/bun": "latest",
+		"@types/smtp-server": "^3.5.12"
 	},
 	"scripts": {
 		"dev": "bun run src/index.ts"
 	},
 	"peerDependencies": {
 		"typescript": "^5"
+	},
+	"dependencies": {
+		"smtp-server": "^3.17.1"
 	}
 }

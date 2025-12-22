@@ -1,4 +1,4 @@
-# database
+# redis
 
 To install dependencies:
 

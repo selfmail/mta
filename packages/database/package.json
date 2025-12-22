@@ -1,12 +1,26 @@
 {
-  "name": "database",
-  "module": "index.ts",
-  "type": "module",
-  "private": true,
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  }
+	"name": "@mta/database",
+	"module": "src/index.ts",
+	"type": "module",
+	"private": true,
+	"devDependencies": {
+		"@types/bun": "latest",
+		"@types/pg": "^8.16.0",
+		"dotenv": "^17.2.3",
+		"pg": "^8.16.3",
+		"prisma": "^7.2.0"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"dependencies": {
+		"@prisma/adapter-pg": "^7.2.0",
+		"@prisma/client": "^7.2.0"
+	},
+	"exports": {
+		".": {
+			"import": "./src/index.ts",
+			"types": "./src/sindex.ts"
+		}
+	}
 }

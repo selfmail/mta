@@ -1,5 +1,5 @@
 {
-  "name": "spam",
+  "name": "incoming",
   "module": "index.ts",
   "type": "module",
   "private": true,

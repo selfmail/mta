@@ -10,6 +10,7 @@
 		"typescript": "5"
 	},
 	"dependencies": {
-		"elysia": "1"
+		"elysia": "1",
+		"@mta/database": "workspace:*"
 	}
 }

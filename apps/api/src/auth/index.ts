@@ -8,6 +8,36 @@ export const auth = new Elysia({
 	.get("/", async () => {
 		return await AuthService.userList();
 	})
+	// Get session of user
+	.get("/me", async ({ cookie: { sessionToken }, set }) => {
+		try {
+			if (!sessionToken?.value) {
+				set.status = 401;
+				return { error: "Not authenticated" };
+			}
+
+			const session = await AuthService.getSession(
+				sessionToken.value as string,
+			);
+
+			if (!session) {
+				set.status = 401;
+				return { error: "Invalid session" };
+			}
+
+			return {
+				user: {
+					id: session.user.id,
+					email: session.user.email,
+					name: session.user.name,
+				},
+				sessionId: session.id,
+			};
+		} catch (error) {
+			set.status = 401;
+			return { error: "Session expired or invalid" };
+		}
+	})
 	// Register a new user
 	.post(
 		"/",

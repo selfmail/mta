@@ -10,7 +10,8 @@
 		"typescript": "5"
 	},
 	"dependencies": {
-		"elysia": "1",
-		"@mta/database": "workspace:*"
+		"@elysiajs/cors": "^1.4.0",
+		"@mta/database": "workspace:*",
+		"elysia": "1"
 	}
 }

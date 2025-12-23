@@ -16,8 +16,12 @@ export const auth = new Elysia({
 		},
 		{
 			body: t.Object({
-				email: t.String(),
-				password: t.String(),
+				email: t.String({
+					format: "email",
+				}),
+				password: t.String({
+					minLength: 6,
+				}),
 				name: t.String(),
 			}),
 		},

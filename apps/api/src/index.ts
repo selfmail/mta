@@ -1,7 +1,14 @@
+import { cors } from "@elysiajs/cors";
 import { Elysia } from "elysia";
 import { auth } from "./auth";
 
 const app = new Elysia()
+	.use(
+		cors({
+			origin: "http://localhost:3000",
+			credentials: true,
+		}),
+	)
 	.get("/", () => ({ hello: "Bun👋" }))
 	.use(auth)
 	.listen(8080);

@@ -64,12 +64,16 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 		return (
 			<>
 				<div
-					className={`flex flex-col min-h-screen items-center justify-center ${showSidebar ? "pt-32" : ""}`}
+					className={`flex flex-col min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 ${showSidebar ? "pt-32" : "items-center justify-center"}`}
 				>
 					<div
-						className={`flex flex-1 flex-row w-full h-full ${showSidebar ? "px-72" : "justify-center"}`}
+						className={`flex flex-1 flex-row w-full h-full ${showSidebar ? "px-72" : "justify-center items-center"}`}
 					>
-						{showSidebar && <Sidebar />}
+						{showSidebar && (
+							<div className="sticky top-32 self-start">
+								<Sidebar />
+							</div>
+						)}
 						<div className="flex flex-col space-y-16 w-full max-w-4xl">
 							<Outlet />
 						</div>

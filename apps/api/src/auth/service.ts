@@ -3,7 +3,6 @@ import { prisma } from "@mta/database";
 // biome-ignore lint/complexity/noStaticOnlyClass: disable
 export class AuthService {
 	static async register(email: string, password: string, name: string) {
-		console.log("Register User");
 		// Check whether the user already exists
 		const existingUser = await prisma.user.findUnique({
 			where: { email },
@@ -54,7 +53,7 @@ export class AuthService {
 			throw new Error("User not found");
 		}
 
-		const isPasswordValid = await Bun.password.verify(user.password, password);
+		const isPasswordValid = await Bun.password.verify(password, user.password);
 
 		if (!isPasswordValid) {
 			throw new Error("Invalid password");
@@ -118,7 +117,7 @@ export class AuthService {
 			throw new Error("User not found");
 		}
 
-		const isPasswordValid = await Bun.password.verify(user.password, password);
+		const isPasswordValid = await Bun.password.verify(password, user.password);
 
 		if (!isPasswordValid) {
 			throw new Error("Invalid password");

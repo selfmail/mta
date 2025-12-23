@@ -2,16 +2,16 @@
 	"name": "api",
 	"type": "module",
 	"scripts": {
-		"dev": "bun run src/index.ts",
+		"dev": "bun --watch run src/index.ts",
 		"typecheck": "tsc"
 	},
 	"devDependencies": {
 		"@types/bun": "1",
+		"@mta/database": "workspace:*",
 		"typescript": "5"
 	},
 	"dependencies": {
 		"@elysiajs/cors": "^1.4.0",
-		"@mta/database": "workspace:*",
 		"elysia": "1"
 	}
 }

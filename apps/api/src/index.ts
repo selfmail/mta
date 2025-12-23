@@ -1,8 +1,13 @@
+import "dotenv/config";
 import { cors } from "@elysiajs/cors";
 import { Elysia } from "elysia";
 import { auth } from "./auth";
 
 const app = new Elysia()
+	.onError((err) => {
+		console.error("Unhandled Error:", err);
+		return { error: "Unknown Error" };
+	})
 	.use(
 		cors({
 			origin: "http://localhost:3000",

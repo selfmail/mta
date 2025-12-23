@@ -14,10 +14,10 @@
       "name": "api",
       "dependencies": {
         "@elysiajs/cors": "^1.4.0",
-        "@mta/database": "workspace:*",
         "elysia": "1",
       },
       "devDependencies": {
+        "@mta/database": "workspace:*",
         "@types/bun": "1",
         "typescript": "5",
       },
@@ -76,11 +76,11 @@
       "dependencies": {
         "@prisma/adapter-pg": "^7.2.0",
         "@prisma/client": "^7.2.0",
+        "dotenv": "^17.2.3",
       },
       "devDependencies": {
         "@types/bun": "latest",
         "@types/pg": "^8.16.0",
-        "dotenv": "^17.2.3",
         "pg": "^8.16.3",
         "prisma": "^7.2.0",
       },

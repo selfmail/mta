@@ -1,6 +1,7 @@
 import { SMTPServer } from "smtp-server";
 
 // TODO: loading whitelist, blacklist and other configs into memory from database
+// smtpServer.server.maxConnections = 100; set with db value
 
 const smtpServer = new SMTPServer({
 	name: "Selfmail MTA Inbound Server",

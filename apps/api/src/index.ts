@@ -2,6 +2,7 @@ import "dotenv/config";
 import { cors } from "@elysiajs/cors";
 import { Elysia } from "elysia";
 import { auth } from "./auth";
+import { inbound } from "./inbound";
 
 const app = new Elysia()
 	.onError((err) => {
@@ -16,6 +17,7 @@ const app = new Elysia()
 	)
 	.get("/", () => ({ hello: "Bun👋" }))
 	.use(auth)
+	.use(inbound)
 	.listen(8080);
 
 console.log(`Listening on ${app.server?.url}`);

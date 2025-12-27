@@ -1,29 +1,21 @@
 "use client";
 
-import type { Transition } from "motion/react";
 import { motion, useAnimation } from "motion/react";
 import type { HTMLAttributes } from "react";
 import { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
 
 import { cn } from "@/lib/utils";
 
-export interface LayersIconHandle {
+export interface BoxesIconHandle {
 	startAnimation: () => void;
 	stopAnimation: () => void;
 }
 
-interface LayersIconProps extends HTMLAttributes<HTMLDivElement> {
+interface BoxesIconProps extends HTMLAttributes<HTMLDivElement> {
 	size?: number;
 }
 
-const DEFAULT_TRANSITION: Transition = {
-	type: "spring",
-	stiffness: 100,
-	damping: 14,
-	mass: 1,
-};
-
-const LayersIcon = forwardRef<LayersIconHandle, LayersIconProps>(
+const BoxesIcon = forwardRef<BoxesIconHandle, BoxesIconProps>(
 	({ onMouseEnter, onMouseLeave, className, size = 18, ...props }, ref) => {
 		const controls = useAnimation();
 		const isControlledRef = useRef(false);
@@ -32,19 +24,15 @@ const LayersIcon = forwardRef<LayersIconHandle, LayersIconProps>(
 			isControlledRef.current = true;
 
 			return {
-				startAnimation: async () => {
-					await controls.start("firstState");
-					await controls.start("secondState");
-				},
+				startAnimation: () => controls.start("animate"),
 				stopAnimation: () => controls.start("normal"),
 			};
 		});
 
 		const handleMouseEnter = useCallback(
-			async (e: React.MouseEvent<HTMLDivElement>) => {
+			(e: React.MouseEvent<HTMLDivElement>) => {
 				if (!isControlledRef.current) {
-					await controls.start("firstState");
-					await controls.start("secondState");
+					controls.start("animate");
 				} else {
 					onMouseEnter?.(e);
 				}
@@ -74,6 +62,7 @@ const LayersIcon = forwardRef<LayersIconHandle, LayersIconProps>(
 					xmlns="http://www.w3.org/2000/svg"
 					width={size}
 					height={size}
+					style={{ overflow: "visible" }}
 					viewBox="0 0 24 24"
 					fill="none"
 					stroke="currentColor"
@@ -81,26 +70,29 @@ const LayersIcon = forwardRef<LayersIconHandle, LayersIconProps>(
 					strokeLinecap="round"
 					strokeLinejoin="round"
 				>
-					<path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
 					<motion.path
-						d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"
+						d="M2.97 12.92A2 2 0 0 0 2 14.63v3.24a2 2 0 0 0 .97 1.71l3 1.8a2 2 0 0 0 2.06 0L12 19v-5.5l-5-3-4.03 2.42Z m4.03 3.58 -4.74 -2.85 m4.74 2.85 5-3 m-5 3v5.17"
 						variants={{
-							normal: { y: 0 },
-							firstState: { y: -9 },
-							secondState: { y: 0 },
+							normal: { translateX: 0, translateY: 0 },
+							animate: { translateX: -1.5, translateY: 1.5 },
 						}}
 						animate={controls}
-						transition={DEFAULT_TRANSITION}
 					/>
 					<motion.path
-						d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"
+						d="M12 13.5V19l3.97 2.38a2 2 0 0 0 2.06 0l3-1.8a2 2 0 0 0 .97-1.71v-3.24a2 2 0 0 0-.97-1.71L17 10.5l-5 3Z m5 3-5-3 m5 3 4.74-2.85 M17 16.5v5.17"
 						variants={{
-							normal: { y: 0 },
-							firstState: { y: -5 },
-							secondState: { y: 0 },
+							normal: { translateX: 0, translateY: 0 },
+							animate: { translateX: 1.5, translateY: 1.5 },
 						}}
 						animate={controls}
-						transition={DEFAULT_TRANSITION}
+					/>
+					<motion.path
+						d="M7.97 4.42A2 2 0 0 0 7 6.13v4.37l5 3 5-3V6.13a2 2 0 0 0-.97-1.71l-3-1.8a2 2 0 0 0-2.06 0l-3 1.8Z M12 8 7.26 5.15 m4.74 2.85 4.74-2.85 M12 13.5V8"
+						variants={{
+							normal: { translateX: 0, translateY: 0 },
+							animate: { translateX: 0, translateY: -1.5 },
+						}}
+						animate={controls}
 					/>
 				</svg>
 			</div>
@@ -108,6 +100,6 @@ const LayersIcon = forwardRef<LayersIconHandle, LayersIconProps>(
 	},
 );
 
-LayersIcon.displayName = "LayersIcon";
+BoxesIcon.displayName = "BoxesIcon";
 
-export { LayersIcon };
+export { BoxesIcon };

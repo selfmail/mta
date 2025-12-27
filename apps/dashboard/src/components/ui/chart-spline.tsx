@@ -14,7 +14,6 @@ export interface ChartSplineIconHandle {
 
 interface ChartSplineIconProps extends HTMLAttributes<HTMLDivElement> {
 	size?: number;
-	children?: React.ReactNode;
 }
 
 const VARIANTS: Variants = {
@@ -34,10 +33,7 @@ const VARIANTS: Variants = {
 };
 
 const ChartSplineIcon = forwardRef<ChartSplineIconHandle, ChartSplineIconProps>(
-	(
-		{ onMouseEnter, onMouseLeave, className, size = 18, children, ...props },
-		ref,
-	) => {
+	({ onMouseEnter, onMouseLeave, className, size = 18, ...props }, ref) => {
 		const controls = useAnimation();
 		const isControlledRef = useRef(false);
 
@@ -74,7 +70,7 @@ const ChartSplineIcon = forwardRef<ChartSplineIconHandle, ChartSplineIconProps>(
 
 		return (
 			<div
-				className={cn("inline-flex items-center gap-2", className)}
+				className={cn(className)}
 				onMouseEnter={handleMouseEnter}
 				onMouseLeave={handleMouseLeave}
 				{...props}
@@ -97,7 +93,6 @@ const ChartSplineIcon = forwardRef<ChartSplineIconHandle, ChartSplineIconProps>(
 						animate={controls}
 					/>
 				</svg>
-				{children}
 			</div>
 		);
 	},

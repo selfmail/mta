@@ -1,51 +1,53 @@
 "use client";
 
-import type { Transition, Variants } from "motion/react";
+import type { Variants } from "motion/react";
 import { motion, useAnimation } from "motion/react";
 import type { HTMLAttributes } from "react";
 import { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
 
 import { cn } from "@/lib/utils";
 
-export interface CpuIconHandle {
+export interface ConnectIconHandle {
 	startAnimation: () => void;
 	stopAnimation: () => void;
 }
 
-interface CpuIconProps extends HTMLAttributes<HTMLDivElement> {
+interface ConnectIconProps extends HTMLAttributes<HTMLDivElement> {
 	size?: number;
 }
 
-const TRANSITION: Transition = {
-	duration: 0.5,
-	ease: "easeInOut",
-	repeat: 1,
-};
-
-const Y_VARIANTS: Variants = {
+const PLUG_VARIANTS: Variants = {
 	normal: {
-		scale: 1,
-		rotate: 0,
-		opacity: 1,
+		x: 0,
+		y: 0,
 	},
 	animate: {
-		scaleY: [1, 1.5, 1],
-		opacity: [1, 0.8, 1],
-	},
-};
-const X_VARIANTS: Variants = {
-	normal: {
-		scale: 1,
-		rotate: 0,
-		opacity: 1,
-	},
-	animate: {
-		scaleX: [1, 1.5, 1],
-		opacity: [1, 0.8, 1],
+		x: -3,
+		y: 3,
 	},
 };
 
-const CpuIcon = forwardRef<CpuIconHandle, CpuIconProps>(
+const SOCKET_VARIANTS: Variants = {
+	normal: {
+		x: 0,
+		y: 0,
+	},
+	animate: {
+		x: 3,
+		y: -3,
+	},
+};
+
+const PATH_VARIANTS = {
+	normal: (custom: { x: number; y: number }) => ({
+		d: `M${custom.x} ${custom.y} l2.5 -2.5`,
+	}),
+	animate: (custom: { x: number; y: number }) => ({
+		d: `M${custom.x + 2.93} ${custom.y - 2.93} l0.10 -0.10`,
+	}),
+};
+
+const ConnectIcon = forwardRef<ConnectIconHandle, ConnectIconProps>(
 	({ onMouseEnter, onMouseLeave, className, size = 18, ...props }, ref) => {
 		const controls = useAnimation();
 		const isControlledRef = useRef(false);
@@ -80,6 +82,7 @@ const CpuIcon = forwardRef<CpuIconHandle, CpuIconProps>(
 			},
 			[controls, onMouseLeave],
 		);
+
 		return (
 			<div
 				className={cn(className)}
@@ -98,55 +101,57 @@ const CpuIcon = forwardRef<CpuIconHandle, CpuIconProps>(
 					strokeLinecap="round"
 					strokeLinejoin="round"
 				>
-					<rect width="16" height="16" x="4" y="4" rx="2" />
-					<rect width="6" height="6" x="9" rx="1" y="9" />
 					<motion.path
-						d="M15 2v2"
-						variants={Y_VARIANTS}
-						transition={TRANSITION}
+						d="M19 5l3 -3"
+						variants={{
+							normal: {
+								d: "M19 5l3 -3",
+							},
+							animate: {
+								d: "M17 7l5 -5",
+							},
+						}}
 						animate={controls}
+						transition={{ type: "spring", stiffness: 500, damping: 30 }}
 					/>
 					<motion.path
-						d="M15 20v2"
-						variants={Y_VARIANTS}
-						transition={TRANSITION}
+						d="m2 22 3-3"
+						variants={{
+							normal: {
+								d: "m2 22 3-3",
+							},
+							animate: {
+								d: "m2 22 6-6",
+							},
+						}}
 						animate={controls}
+						transition={{ type: "spring", stiffness: 500, damping: 30 }}
 					/>
 					<motion.path
-						d="M2 15h2"
-						variants={X_VARIANTS}
-						transition={TRANSITION}
+						d="M6.3 20.3a2.4 2.4 0 0 0 3.4 0L12 18l-6-6-2.3 2.3a2.4 2.4 0 0 0 0 3.4Z"
+						variants={SOCKET_VARIANTS}
 						animate={controls}
+						transition={{ type: "spring", stiffness: 500, damping: 30 }}
 					/>
 					<motion.path
-						d="M2 9h2"
-						variants={X_VARIANTS}
-						transition={TRANSITION}
+						variants={PATH_VARIANTS}
+						custom={{ x: 7.5, y: 13.5 }}
+						initial="normal"
 						animate={controls}
+						transition={{ type: "spring", stiffness: 500, damping: 30 }}
 					/>
 					<motion.path
-						d="M20 15h2"
-						variants={X_VARIANTS}
-						transition={TRANSITION}
+						variants={PATH_VARIANTS}
+						custom={{ x: 10.5, y: 16.5 }}
+						initial="normal"
 						animate={controls}
+						transition={{ type: "spring", stiffness: 500, damping: 30 }}
 					/>
 					<motion.path
-						d="M20 9h2"
-						variants={X_VARIANTS}
-						transition={TRANSITION}
+						d="m12 6 6 6 2.3-2.3a2.4 2.4 0 0 0 0-3.4l-2.6-2.6a2.4 2.4 0 0 0-3.4 0Z"
+						variants={PLUG_VARIANTS}
 						animate={controls}
-					/>
-					<motion.path
-						d="M9 2v2"
-						variants={Y_VARIANTS}
-						transition={TRANSITION}
-						animate={controls}
-					/>
-					<motion.path
-						d="M9 20v2"
-						variants={Y_VARIANTS}
-						transition={TRANSITION}
-						animate={controls}
+						transition={{ type: "spring", stiffness: 500, damping: 30 }}
 					/>
 				</svg>
 			</div>
@@ -154,6 +159,6 @@ const CpuIcon = forwardRef<CpuIconHandle, CpuIconProps>(
 	},
 );
 
-CpuIcon.displayName = "CpuIcon";
+ConnectIcon.displayName = "ConnectIcon";
 
-export { CpuIcon };
+export { ConnectIcon };

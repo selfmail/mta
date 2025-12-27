@@ -14,7 +14,6 @@ export interface ArchiveIconHandle {
 
 interface ArchiveIconProps extends HTMLAttributes<HTMLDivElement> {
 	size?: number;
-	children?: React.ReactNode;
 }
 
 const RECT_VARIANTS: Variants = {
@@ -49,10 +48,7 @@ const SECONDARY_PATH_VARIANTS: Variants = {
 };
 
 const ArchiveIcon = forwardRef<ArchiveIconHandle, ArchiveIconProps>(
-	(
-		{ onMouseEnter, onMouseLeave, className, size = 18, children, ...props },
-		ref,
-	) => {
+	({ onMouseEnter, onMouseLeave, className, size = 18, ...props }, ref) => {
 		const controls = useAnimation();
 		const isControlledRef = useRef(false);
 
@@ -89,7 +85,7 @@ const ArchiveIcon = forwardRef<ArchiveIconHandle, ArchiveIconProps>(
 
 		return (
 			<div
-				className={cn("inline-flex items-center gap-2", className)}
+				className={cn(className)}
 				onMouseEnter={handleMouseEnter}
 				onMouseLeave={handleMouseLeave}
 				{...props}
@@ -126,7 +122,6 @@ const ArchiveIcon = forwardRef<ArchiveIconHandle, ArchiveIconProps>(
 						animate={controls}
 					/>
 				</svg>
-				{children}
 			</div>
 		);
 	},

@@ -14,7 +14,6 @@ export interface WorkflowIconHandle {
 
 interface WorkflowIconProps extends HTMLAttributes<HTMLDivElement> {
 	size?: number;
-	children?: React.ReactNode;
 }
 
 const TRANSITION: Transition = {
@@ -38,10 +37,7 @@ const VARIANTS: Variants = {
 };
 
 const WorkflowIcon = forwardRef<WorkflowIconHandle, WorkflowIconProps>(
-	(
-		{ onMouseEnter, onMouseLeave, className, size = 18, children, ...props },
-		ref,
-	) => {
+	({ onMouseEnter, onMouseLeave, className, size = 18, ...props }, ref) => {
 		const controls = useAnimation();
 		const isControlledRef = useRef(false);
 
@@ -78,7 +74,7 @@ const WorkflowIcon = forwardRef<WorkflowIconHandle, WorkflowIconProps>(
 
 		return (
 			<div
-				className={cn("inline-flex items-center gap-2", className)}
+				className={cn(className)}
 				onMouseEnter={handleMouseEnter}
 				onMouseLeave={handleMouseLeave}
 				{...props}
@@ -121,7 +117,6 @@ const WorkflowIcon = forwardRef<WorkflowIconHandle, WorkflowIconProps>(
 						custom={0}
 					/>
 				</svg>
-				{children}
 			</div>
 		);
 	},

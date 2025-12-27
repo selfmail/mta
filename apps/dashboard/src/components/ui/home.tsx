@@ -14,7 +14,6 @@ export interface HomeIconHandle {
 
 interface HomeIconProps extends HTMLAttributes<HTMLDivElement> {
 	size?: number;
-	children?: React.ReactNode;
 }
 
 const DEFAULT_TRANSITION: Transition = {
@@ -34,10 +33,7 @@ const PATH_VARIANTS: Variants = {
 };
 
 const HomeIcon = forwardRef<HomeIconHandle, HomeIconProps>(
-	(
-		{ onMouseEnter, onMouseLeave, className, size = 18, children, ...props },
-		ref,
-	) => {
+	({ onMouseEnter, onMouseLeave, className, size = 18, ...props }, ref) => {
 		const controls = useAnimation();
 		const isControlledRef = useRef(false);
 
@@ -73,7 +69,7 @@ const HomeIcon = forwardRef<HomeIconHandle, HomeIconProps>(
 		);
 		return (
 			<div
-				className={cn("inline-flex items-center gap-2", className)}
+				className={cn(className)}
 				onMouseEnter={handleMouseEnter}
 				onMouseLeave={handleMouseLeave}
 				{...props}
@@ -97,7 +93,6 @@ const HomeIcon = forwardRef<HomeIconHandle, HomeIconProps>(
 						animate={controls}
 					/>
 				</svg>
-				{children}
 			</div>
 		);
 	},

@@ -282,12 +282,61 @@ export default function NavigationMenu() {
 				</Menu.Portal>
 			</Menu.Root>
 
-			<Separator
-				orientation="vertical"
-				className="w-px h-5 rounded-full rotate-12 bg-(--border)"
-			/>
+			{currentSubRoute && (
+				<>
+					<Separator
+						orientation="vertical"
+						className="w-px h-5 rounded-full rotate-12 bg-(--border)"
+					/>
 
-			{/* Second Menu */}
+					{/* Second Menu */}
+					<Menu.Root>
+						<Menu.Trigger className="flex group cursor-pointer items-center flex-row p-1 px-2 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors rounded-lg space-x-2">
+							<div
+								className={`flex items-center justify-center ${colors.text} rounded-sm border aspect-square h-7 w-7 ${colors.border} ${colors.bg} group-${colors.hoverBg} group-${colors.hoverBorder} transition-colors duration-150 cursor-pointer`}
+							>
+								{currentSubRoute?.icon ||
+									currentSubRoute?.label.charAt(0).toUpperCase()}
+							</div>
+							<span className="font-medium">{currentSubRoute?.label}</span>
+						</Menu.Trigger>
+						<Menu.Portal>
+							<Menu.Positioner sideOffset={8}>
+								<Menu.Popup className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl py-2 min-w-[240px] z-50">
+									{currentRoute?.children?.map((child) => {
+										const childPath = `/${currentRoute.label.toLowerCase().replace(/ /g, "-")}/${child.label.toLowerCase().replace(/ /g, "-")}`;
+										const isActive = route.pathname === childPath;
+
+										// Don't render the active item
+										if (isActive) return null;
+
+										return (
+											<Menu.Item
+												key={child.label}
+												className="px-3 py-2 mx-1 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer outline-none"
+												onClick={() => {
+													navigate({ to: childPath });
+												}}
+											>
+												<div className="flex items-center space-x-3">
+													<div
+														className={`flex items-center justify-center ${colors.text} rounded-md border aspect-square h-7 w-7 ${colors.border} ${colors.bg} transition-colors duration-150`}
+													>
+														{child.icon || child.label.charAt(0).toUpperCase()}
+													</div>
+													<span className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+														{child.label}
+													</span>
+												</div>
+											</Menu.Item>
+										);
+									})}
+								</Menu.Popup>
+							</Menu.Positioner>
+						</Menu.Portal>
+					</Menu.Root>
+				</>
+			)}
 		</div>
 	);
 }

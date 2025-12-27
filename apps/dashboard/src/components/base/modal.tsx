@@ -1,5 +1,5 @@
 import { Dialog } from "@base-ui/react/dialog";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 interface ModalProps {
 	isOpen: boolean;
@@ -58,6 +58,7 @@ export function Modal({
 									stroke="currentColor"
 									strokeWidth={2}
 								>
+									<title>Close</title>
 									<path
 										strokeLinecap="round"
 										strokeLinejoin="round"

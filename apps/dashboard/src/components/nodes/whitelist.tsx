@@ -9,7 +9,7 @@ export default function WhitelistNode() {
 			{/* Header section */}
 			<div className="flex items-center gap-2 px-3 py-2">
 				{/* Icon */}
-				<div className="shrink-0 w-6 h-6 rounded bg-purple-100 flex items-center justify-center">
+				<div className="apps/dashboard/src/components/nodes/whitelist.tsxshrink-0 w-6 h-6 rounded bg-purple-100 flex items-center justify-center">
 					<ShieldCheck className="w-3.5 h-3.5 text-purple-600" />
 				</div>
 

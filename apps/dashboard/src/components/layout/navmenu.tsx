@@ -1,6 +1,7 @@
 import { Separator } from "@base-ui/react";
 import { Menu } from "@base-ui/react/menu";
 import { useLocation, useNavigate } from "@tanstack/react-router";
+import { BookTextIcon } from "../ui/book-text";
 import { BotIcon } from "../ui/bot";
 import { BoxesIcon } from "../ui/boxes";
 import { ChartSplineIcon } from "../ui/chart-spline";
@@ -106,6 +107,11 @@ const items = [
 		color: "yellow",
 		icon: <FolderCodeIcon />,
 	},
+	{
+		label: "Documentation",
+		color: "darkgreen",
+		icon: <BookTextIcon />,
+	},
 ];
 
 const colorClasses = {
@@ -150,6 +156,13 @@ const colorClasses = {
 		bg: "bg-yellow-100",
 		hoverBg: "hover:bg-yellow-200",
 		hoverBorder: "hover:border-yellow-300",
+	},
+	darkgreen: {
+		text: "text-emerald-800",
+		border: "border-emerald-300",
+		bg: "bg-emerald-200",
+		hoverBg: "hover:bg-emerald-300",
+		hoverBorder: "hover:border-emerald-400",
 	},
 };
 

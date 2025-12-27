@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/actions/")({
+export const Route = createFileRoute("/inbound-actions/")({
 	component: RouteComponent,
 });
 
@@ -85,5 +85,5 @@ function RouteComponent() {
 				))}
 			</div>
 		</div>
-	);
+	)
 }

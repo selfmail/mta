@@ -11,10 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ServicesIndexRouteImport } from './routes/services/index'
-import { Route as ActionsIndexRouteImport } from './routes/actions/index'
+import { Route as InboundActionsIndexRouteImport } from './routes/inbound-actions/index'
+import { Route as InboundActionsConnectionRouteImport } from './routes/inbound-actions/connection'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
-import { Route as ActionsConnectionRouteImport } from './routes/actions/connection'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -26,11 +26,17 @@ const ServicesIndexRoute = ServicesIndexRouteImport.update({
   path: '/services/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ActionsIndexRoute = ActionsIndexRouteImport.update({
-  id: '/actions/',
-  path: '/actions/',
+const InboundActionsIndexRoute = InboundActionsIndexRouteImport.update({
+  id: '/inbound-actions/',
+  path: '/inbound-actions/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InboundActionsConnectionRoute =
+  InboundActionsConnectionRouteImport.update({
+    id: '/inbound-actions/connection',
+    path: '/inbound-actions/connection',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
   id: '/auth/register',
   path: '/auth/register',
@@ -41,70 +47,65 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ActionsConnectionRoute = ActionsConnectionRouteImport.update({
-  id: '/actions/connection',
-  path: '/actions/connection',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/actions/connection': typeof ActionsConnectionRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
-  '/actions': typeof ActionsIndexRoute
+  '/inbound-actions/connection': typeof InboundActionsConnectionRoute
+  '/inbound-actions': typeof InboundActionsIndexRoute
   '/services': typeof ServicesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/actions/connection': typeof ActionsConnectionRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
-  '/actions': typeof ActionsIndexRoute
+  '/inbound-actions/connection': typeof InboundActionsConnectionRoute
+  '/inbound-actions': typeof InboundActionsIndexRoute
   '/services': typeof ServicesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/actions/connection': typeof ActionsConnectionRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
-  '/actions/': typeof ActionsIndexRoute
+  '/inbound-actions/connection': typeof InboundActionsConnectionRoute
+  '/inbound-actions/': typeof InboundActionsIndexRoute
   '/services/': typeof ServicesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/actions/connection'
     | '/auth/login'
     | '/auth/register'
-    | '/actions'
+    | '/inbound-actions/connection'
+    | '/inbound-actions'
     | '/services'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/actions/connection'
     | '/auth/login'
     | '/auth/register'
-    | '/actions'
+    | '/inbound-actions/connection'
+    | '/inbound-actions'
     | '/services'
   id:
     | '__root__'
     | '/'
-    | '/actions/connection'
     | '/auth/login'
     | '/auth/register'
-    | '/actions/'
+    | '/inbound-actions/connection'
+    | '/inbound-actions/'
     | '/services/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ActionsConnectionRoute: typeof ActionsConnectionRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
-  ActionsIndexRoute: typeof ActionsIndexRoute
+  InboundActionsConnectionRoute: typeof InboundActionsConnectionRoute
+  InboundActionsIndexRoute: typeof InboundActionsIndexRoute
   ServicesIndexRoute: typeof ServicesIndexRoute
 }
 
@@ -124,11 +125,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/actions/': {
-      id: '/actions/'
-      path: '/actions'
-      fullPath: '/actions'
-      preLoaderRoute: typeof ActionsIndexRouteImport
+    '/inbound-actions/': {
+      id: '/inbound-actions/'
+      path: '/inbound-actions'
+      fullPath: '/inbound-actions'
+      preLoaderRoute: typeof InboundActionsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inbound-actions/connection': {
+      id: '/inbound-actions/connection'
+      path: '/inbound-actions/connection'
+      fullPath: '/inbound-actions/connection'
+      preLoaderRoute: typeof InboundActionsConnectionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/register': {
@@ -145,22 +153,15 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/actions/connection': {
-      id: '/actions/connection'
-      path: '/actions/connection'
-      fullPath: '/actions/connection'
-      preLoaderRoute: typeof ActionsConnectionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ActionsConnectionRoute: ActionsConnectionRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
-  ActionsIndexRoute: ActionsIndexRoute,
+  InboundActionsConnectionRoute: InboundActionsConnectionRoute,
+  InboundActionsIndexRoute: InboundActionsIndexRoute,
   ServicesIndexRoute: ServicesIndexRoute,
 }
 export const routeTree = rootRouteImport

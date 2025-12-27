@@ -5,7 +5,7 @@ import EndNode from "@/components/nodes/end";
 import StartNode from "@/components/nodes/start";
 import WhitelistNode from "@/components/nodes/whitelist";
 
-export const Route = createFileRoute("/actions/connection")({
+export const Route = createFileRoute("/inbound-actions/connection")({
 	component: ConnectionEventEditor,
 });
 

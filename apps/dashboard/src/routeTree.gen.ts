@@ -10,8 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ServicesIndexRouteImport } from './routes/services/index'
-import { Route as InboundActionsIndexRouteImport } from './routes/inbound-actions/index'
+import { Route as ScriptsIndexRouteImport } from './routes/scripts/index'
+import { Route as ProblemsIndexRouteImport } from './routes/problems/index'
+import { Route as DocumentationIndexRouteImport } from './routes/documentation/index'
+import { Route as AnalyticsIndexRouteImport } from './routes/analytics/index'
+import { Route as ServicesServersRouteImport } from './routes/services/servers'
+import { Route as ServicesRspamdRouteImport } from './routes/services/rspamd'
+import { Route as ServicesRedisRouteImport } from './routes/services/redis'
+import { Route as ServicesPostgresqlRouteImport } from './routes/services/postgresql'
+import { Route as ServicesClamavRouteImport } from './routes/services/clamav'
+import { Route as OutboundActionsRecipientRouteImport } from './routes/outbound-actions/recipient'
+import { Route as OutboundActionsProcessingQueueRouteImport } from './routes/outbound-actions/processing-queue'
+import { Route as OutboundActionsMailFromRouteImport } from './routes/outbound-actions/mail-from'
+import { Route as OutboundActionsMailDataRouteImport } from './routes/outbound-actions/mail-data'
+import { Route as OutboundActionsConnectionRouteImport } from './routes/outbound-actions/connection'
+import { Route as InboundActionsRecipientRouteImport } from './routes/inbound-actions/recipient'
+import { Route as InboundActionsProcessingQueueRouteImport } from './routes/inbound-actions/processing-queue'
+import { Route as InboundActionsMailFromRouteImport } from './routes/inbound-actions/mail-from'
+import { Route as InboundActionsMailDataRouteImport } from './routes/inbound-actions/mail-data'
 import { Route as InboundActionsConnectionRouteImport } from './routes/inbound-actions/connection'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
@@ -21,14 +37,98 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ServicesIndexRoute = ServicesIndexRouteImport.update({
-  id: '/services/',
-  path: '/services/',
+const ScriptsIndexRoute = ScriptsIndexRouteImport.update({
+  id: '/scripts/',
+  path: '/scripts/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const InboundActionsIndexRoute = InboundActionsIndexRouteImport.update({
-  id: '/inbound-actions/',
-  path: '/inbound-actions/',
+const ProblemsIndexRoute = ProblemsIndexRouteImport.update({
+  id: '/problems/',
+  path: '/problems/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocumentationIndexRoute = DocumentationIndexRouteImport.update({
+  id: '/documentation/',
+  path: '/documentation/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalyticsIndexRoute = AnalyticsIndexRouteImport.update({
+  id: '/analytics/',
+  path: '/analytics/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesServersRoute = ServicesServersRouteImport.update({
+  id: '/services/servers',
+  path: '/services/servers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesRspamdRoute = ServicesRspamdRouteImport.update({
+  id: '/services/rspamd',
+  path: '/services/rspamd',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesRedisRoute = ServicesRedisRouteImport.update({
+  id: '/services/redis',
+  path: '/services/redis',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesPostgresqlRoute = ServicesPostgresqlRouteImport.update({
+  id: '/services/postgresql',
+  path: '/services/postgresql',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesClamavRoute = ServicesClamavRouteImport.update({
+  id: '/services/clamav',
+  path: '/services/clamav',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OutboundActionsRecipientRoute =
+  OutboundActionsRecipientRouteImport.update({
+    id: '/outbound-actions/recipient',
+    path: '/outbound-actions/recipient',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const OutboundActionsProcessingQueueRoute =
+  OutboundActionsProcessingQueueRouteImport.update({
+    id: '/outbound-actions/processing-queue',
+    path: '/outbound-actions/processing-queue',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const OutboundActionsMailFromRoute = OutboundActionsMailFromRouteImport.update({
+  id: '/outbound-actions/mail-from',
+  path: '/outbound-actions/mail-from',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OutboundActionsMailDataRoute = OutboundActionsMailDataRouteImport.update({
+  id: '/outbound-actions/mail-data',
+  path: '/outbound-actions/mail-data',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OutboundActionsConnectionRoute =
+  OutboundActionsConnectionRouteImport.update({
+    id: '/outbound-actions/connection',
+    path: '/outbound-actions/connection',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const InboundActionsRecipientRoute = InboundActionsRecipientRouteImport.update({
+  id: '/inbound-actions/recipient',
+  path: '/inbound-actions/recipient',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InboundActionsProcessingQueueRoute =
+  InboundActionsProcessingQueueRouteImport.update({
+    id: '/inbound-actions/processing-queue',
+    path: '/inbound-actions/processing-queue',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const InboundActionsMailFromRoute = InboundActionsMailFromRouteImport.update({
+  id: '/inbound-actions/mail-from',
+  path: '/inbound-actions/mail-from',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InboundActionsMailDataRoute = InboundActionsMailDataRouteImport.update({
+  id: '/inbound-actions/mail-data',
+  path: '/inbound-actions/mail-data',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InboundActionsConnectionRoute =
@@ -53,16 +153,48 @@ export interface FileRoutesByFullPath {
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/inbound-actions/connection': typeof InboundActionsConnectionRoute
-  '/inbound-actions': typeof InboundActionsIndexRoute
-  '/services': typeof ServicesIndexRoute
+  '/inbound-actions/mail-data': typeof InboundActionsMailDataRoute
+  '/inbound-actions/mail-from': typeof InboundActionsMailFromRoute
+  '/inbound-actions/processing-queue': typeof InboundActionsProcessingQueueRoute
+  '/inbound-actions/recipient': typeof InboundActionsRecipientRoute
+  '/outbound-actions/connection': typeof OutboundActionsConnectionRoute
+  '/outbound-actions/mail-data': typeof OutboundActionsMailDataRoute
+  '/outbound-actions/mail-from': typeof OutboundActionsMailFromRoute
+  '/outbound-actions/processing-queue': typeof OutboundActionsProcessingQueueRoute
+  '/outbound-actions/recipient': typeof OutboundActionsRecipientRoute
+  '/services/clamav': typeof ServicesClamavRoute
+  '/services/postgresql': typeof ServicesPostgresqlRoute
+  '/services/redis': typeof ServicesRedisRoute
+  '/services/rspamd': typeof ServicesRspamdRoute
+  '/services/servers': typeof ServicesServersRoute
+  '/analytics': typeof AnalyticsIndexRoute
+  '/documentation': typeof DocumentationIndexRoute
+  '/problems': typeof ProblemsIndexRoute
+  '/scripts': typeof ScriptsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/inbound-actions/connection': typeof InboundActionsConnectionRoute
-  '/inbound-actions': typeof InboundActionsIndexRoute
-  '/services': typeof ServicesIndexRoute
+  '/inbound-actions/mail-data': typeof InboundActionsMailDataRoute
+  '/inbound-actions/mail-from': typeof InboundActionsMailFromRoute
+  '/inbound-actions/processing-queue': typeof InboundActionsProcessingQueueRoute
+  '/inbound-actions/recipient': typeof InboundActionsRecipientRoute
+  '/outbound-actions/connection': typeof OutboundActionsConnectionRoute
+  '/outbound-actions/mail-data': typeof OutboundActionsMailDataRoute
+  '/outbound-actions/mail-from': typeof OutboundActionsMailFromRoute
+  '/outbound-actions/processing-queue': typeof OutboundActionsProcessingQueueRoute
+  '/outbound-actions/recipient': typeof OutboundActionsRecipientRoute
+  '/services/clamav': typeof ServicesClamavRoute
+  '/services/postgresql': typeof ServicesPostgresqlRoute
+  '/services/redis': typeof ServicesRedisRoute
+  '/services/rspamd': typeof ServicesRspamdRoute
+  '/services/servers': typeof ServicesServersRoute
+  '/analytics': typeof AnalyticsIndexRoute
+  '/documentation': typeof DocumentationIndexRoute
+  '/problems': typeof ProblemsIndexRoute
+  '/scripts': typeof ScriptsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -70,8 +202,24 @@ export interface FileRoutesById {
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/inbound-actions/connection': typeof InboundActionsConnectionRoute
-  '/inbound-actions/': typeof InboundActionsIndexRoute
-  '/services/': typeof ServicesIndexRoute
+  '/inbound-actions/mail-data': typeof InboundActionsMailDataRoute
+  '/inbound-actions/mail-from': typeof InboundActionsMailFromRoute
+  '/inbound-actions/processing-queue': typeof InboundActionsProcessingQueueRoute
+  '/inbound-actions/recipient': typeof InboundActionsRecipientRoute
+  '/outbound-actions/connection': typeof OutboundActionsConnectionRoute
+  '/outbound-actions/mail-data': typeof OutboundActionsMailDataRoute
+  '/outbound-actions/mail-from': typeof OutboundActionsMailFromRoute
+  '/outbound-actions/processing-queue': typeof OutboundActionsProcessingQueueRoute
+  '/outbound-actions/recipient': typeof OutboundActionsRecipientRoute
+  '/services/clamav': typeof ServicesClamavRoute
+  '/services/postgresql': typeof ServicesPostgresqlRoute
+  '/services/redis': typeof ServicesRedisRoute
+  '/services/rspamd': typeof ServicesRspamdRoute
+  '/services/servers': typeof ServicesServersRoute
+  '/analytics/': typeof AnalyticsIndexRoute
+  '/documentation/': typeof DocumentationIndexRoute
+  '/problems/': typeof ProblemsIndexRoute
+  '/scripts/': typeof ScriptsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -80,24 +228,72 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/register'
     | '/inbound-actions/connection'
-    | '/inbound-actions'
-    | '/services'
+    | '/inbound-actions/mail-data'
+    | '/inbound-actions/mail-from'
+    | '/inbound-actions/processing-queue'
+    | '/inbound-actions/recipient'
+    | '/outbound-actions/connection'
+    | '/outbound-actions/mail-data'
+    | '/outbound-actions/mail-from'
+    | '/outbound-actions/processing-queue'
+    | '/outbound-actions/recipient'
+    | '/services/clamav'
+    | '/services/postgresql'
+    | '/services/redis'
+    | '/services/rspamd'
+    | '/services/servers'
+    | '/analytics'
+    | '/documentation'
+    | '/problems'
+    | '/scripts'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth/login'
     | '/auth/register'
     | '/inbound-actions/connection'
-    | '/inbound-actions'
-    | '/services'
+    | '/inbound-actions/mail-data'
+    | '/inbound-actions/mail-from'
+    | '/inbound-actions/processing-queue'
+    | '/inbound-actions/recipient'
+    | '/outbound-actions/connection'
+    | '/outbound-actions/mail-data'
+    | '/outbound-actions/mail-from'
+    | '/outbound-actions/processing-queue'
+    | '/outbound-actions/recipient'
+    | '/services/clamav'
+    | '/services/postgresql'
+    | '/services/redis'
+    | '/services/rspamd'
+    | '/services/servers'
+    | '/analytics'
+    | '/documentation'
+    | '/problems'
+    | '/scripts'
   id:
     | '__root__'
     | '/'
     | '/auth/login'
     | '/auth/register'
     | '/inbound-actions/connection'
-    | '/inbound-actions/'
-    | '/services/'
+    | '/inbound-actions/mail-data'
+    | '/inbound-actions/mail-from'
+    | '/inbound-actions/processing-queue'
+    | '/inbound-actions/recipient'
+    | '/outbound-actions/connection'
+    | '/outbound-actions/mail-data'
+    | '/outbound-actions/mail-from'
+    | '/outbound-actions/processing-queue'
+    | '/outbound-actions/recipient'
+    | '/services/clamav'
+    | '/services/postgresql'
+    | '/services/redis'
+    | '/services/rspamd'
+    | '/services/servers'
+    | '/analytics/'
+    | '/documentation/'
+    | '/problems/'
+    | '/scripts/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -105,8 +301,24 @@ export interface RootRouteChildren {
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
   InboundActionsConnectionRoute: typeof InboundActionsConnectionRoute
-  InboundActionsIndexRoute: typeof InboundActionsIndexRoute
-  ServicesIndexRoute: typeof ServicesIndexRoute
+  InboundActionsMailDataRoute: typeof InboundActionsMailDataRoute
+  InboundActionsMailFromRoute: typeof InboundActionsMailFromRoute
+  InboundActionsProcessingQueueRoute: typeof InboundActionsProcessingQueueRoute
+  InboundActionsRecipientRoute: typeof InboundActionsRecipientRoute
+  OutboundActionsConnectionRoute: typeof OutboundActionsConnectionRoute
+  OutboundActionsMailDataRoute: typeof OutboundActionsMailDataRoute
+  OutboundActionsMailFromRoute: typeof OutboundActionsMailFromRoute
+  OutboundActionsProcessingQueueRoute: typeof OutboundActionsProcessingQueueRoute
+  OutboundActionsRecipientRoute: typeof OutboundActionsRecipientRoute
+  ServicesClamavRoute: typeof ServicesClamavRoute
+  ServicesPostgresqlRoute: typeof ServicesPostgresqlRoute
+  ServicesRedisRoute: typeof ServicesRedisRoute
+  ServicesRspamdRoute: typeof ServicesRspamdRoute
+  ServicesServersRoute: typeof ServicesServersRoute
+  AnalyticsIndexRoute: typeof AnalyticsIndexRoute
+  DocumentationIndexRoute: typeof DocumentationIndexRoute
+  ProblemsIndexRoute: typeof ProblemsIndexRoute
+  ScriptsIndexRoute: typeof ScriptsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -118,18 +330,130 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/services/': {
-      id: '/services/'
-      path: '/services'
-      fullPath: '/services'
-      preLoaderRoute: typeof ServicesIndexRouteImport
+    '/scripts/': {
+      id: '/scripts/'
+      path: '/scripts'
+      fullPath: '/scripts'
+      preLoaderRoute: typeof ScriptsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/inbound-actions/': {
-      id: '/inbound-actions/'
-      path: '/inbound-actions'
-      fullPath: '/inbound-actions'
-      preLoaderRoute: typeof InboundActionsIndexRouteImport
+    '/problems/': {
+      id: '/problems/'
+      path: '/problems'
+      fullPath: '/problems'
+      preLoaderRoute: typeof ProblemsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/documentation/': {
+      id: '/documentation/'
+      path: '/documentation'
+      fullPath: '/documentation'
+      preLoaderRoute: typeof DocumentationIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analytics/': {
+      id: '/analytics/'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/servers': {
+      id: '/services/servers'
+      path: '/services/servers'
+      fullPath: '/services/servers'
+      preLoaderRoute: typeof ServicesServersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/rspamd': {
+      id: '/services/rspamd'
+      path: '/services/rspamd'
+      fullPath: '/services/rspamd'
+      preLoaderRoute: typeof ServicesRspamdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/redis': {
+      id: '/services/redis'
+      path: '/services/redis'
+      fullPath: '/services/redis'
+      preLoaderRoute: typeof ServicesRedisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/postgresql': {
+      id: '/services/postgresql'
+      path: '/services/postgresql'
+      fullPath: '/services/postgresql'
+      preLoaderRoute: typeof ServicesPostgresqlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/clamav': {
+      id: '/services/clamav'
+      path: '/services/clamav'
+      fullPath: '/services/clamav'
+      preLoaderRoute: typeof ServicesClamavRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/outbound-actions/recipient': {
+      id: '/outbound-actions/recipient'
+      path: '/outbound-actions/recipient'
+      fullPath: '/outbound-actions/recipient'
+      preLoaderRoute: typeof OutboundActionsRecipientRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/outbound-actions/processing-queue': {
+      id: '/outbound-actions/processing-queue'
+      path: '/outbound-actions/processing-queue'
+      fullPath: '/outbound-actions/processing-queue'
+      preLoaderRoute: typeof OutboundActionsProcessingQueueRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/outbound-actions/mail-from': {
+      id: '/outbound-actions/mail-from'
+      path: '/outbound-actions/mail-from'
+      fullPath: '/outbound-actions/mail-from'
+      preLoaderRoute: typeof OutboundActionsMailFromRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/outbound-actions/mail-data': {
+      id: '/outbound-actions/mail-data'
+      path: '/outbound-actions/mail-data'
+      fullPath: '/outbound-actions/mail-data'
+      preLoaderRoute: typeof OutboundActionsMailDataRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/outbound-actions/connection': {
+      id: '/outbound-actions/connection'
+      path: '/outbound-actions/connection'
+      fullPath: '/outbound-actions/connection'
+      preLoaderRoute: typeof OutboundActionsConnectionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inbound-actions/recipient': {
+      id: '/inbound-actions/recipient'
+      path: '/inbound-actions/recipient'
+      fullPath: '/inbound-actions/recipient'
+      preLoaderRoute: typeof InboundActionsRecipientRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inbound-actions/processing-queue': {
+      id: '/inbound-actions/processing-queue'
+      path: '/inbound-actions/processing-queue'
+      fullPath: '/inbound-actions/processing-queue'
+      preLoaderRoute: typeof InboundActionsProcessingQueueRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inbound-actions/mail-from': {
+      id: '/inbound-actions/mail-from'
+      path: '/inbound-actions/mail-from'
+      fullPath: '/inbound-actions/mail-from'
+      preLoaderRoute: typeof InboundActionsMailFromRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inbound-actions/mail-data': {
+      id: '/inbound-actions/mail-data'
+      path: '/inbound-actions/mail-data'
+      fullPath: '/inbound-actions/mail-data'
+      preLoaderRoute: typeof InboundActionsMailDataRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/inbound-actions/connection': {
@@ -161,8 +485,24 @@ const rootRouteChildren: RootRouteChildren = {
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
   InboundActionsConnectionRoute: InboundActionsConnectionRoute,
-  InboundActionsIndexRoute: InboundActionsIndexRoute,
-  ServicesIndexRoute: ServicesIndexRoute,
+  InboundActionsMailDataRoute: InboundActionsMailDataRoute,
+  InboundActionsMailFromRoute: InboundActionsMailFromRoute,
+  InboundActionsProcessingQueueRoute: InboundActionsProcessingQueueRoute,
+  InboundActionsRecipientRoute: InboundActionsRecipientRoute,
+  OutboundActionsConnectionRoute: OutboundActionsConnectionRoute,
+  OutboundActionsMailDataRoute: OutboundActionsMailDataRoute,
+  OutboundActionsMailFromRoute: OutboundActionsMailFromRoute,
+  OutboundActionsProcessingQueueRoute: OutboundActionsProcessingQueueRoute,
+  OutboundActionsRecipientRoute: OutboundActionsRecipientRoute,
+  ServicesClamavRoute: ServicesClamavRoute,
+  ServicesPostgresqlRoute: ServicesPostgresqlRoute,
+  ServicesRedisRoute: ServicesRedisRoute,
+  ServicesRspamdRoute: ServicesRspamdRoute,
+  ServicesServersRoute: ServicesServersRoute,
+  AnalyticsIndexRoute: AnalyticsIndexRoute,
+  DocumentationIndexRoute: DocumentationIndexRoute,
+  ProblemsIndexRoute: ProblemsIndexRoute,
+  ScriptsIndexRoute: ScriptsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -206,7 +206,7 @@ export default function NavigationMenu() {
 				</Menu.Trigger>
 				<Menu.Portal>
 					<Menu.Positioner sideOffset={8}>
-						<Menu.Popup className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl py-2 min-w-[240px] z-50">
+						<Menu.Popup className="bg-white z-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl py-2 min-w-60">
 							{items.map((item) => {
 								const itemPath = `/${item.label.toLowerCase().replace(/ /g, "-")}`;
 								const isActive = route.pathname.startsWith(itemPath);
@@ -315,7 +315,7 @@ export default function NavigationMenu() {
 						</Menu.Trigger>
 						<Menu.Portal>
 							<Menu.Positioner sideOffset={8}>
-								<Menu.Popup className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl py-2 min-w-[240px] z-50">
+								<Menu.Popup className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl py-2 min-w-60 z-50">
 									{currentRoute?.children?.map((child) => {
 										const childPath = `/${currentRoute.label.toLowerCase().replace(/ /g, "-")}/${child.label.toLowerCase().replace(/ /g, "-")}`;
 										const isActive = route.pathname === childPath;

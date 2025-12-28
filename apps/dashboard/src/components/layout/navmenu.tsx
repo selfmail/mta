@@ -10,11 +10,17 @@ import { ConnectIcon } from "../ui/connect";
 import { CpuIcon } from "../ui/cpu";
 import { FlameIcon } from "../ui/flame";
 import { FolderCodeIcon } from "../ui/folder-code";
+import { HomeIcon } from "../ui/home";
 import { IdCardIcon } from "../ui/id-card";
 import { LayersIcon } from "../ui/layers";
 import { WorkflowIcon } from "../ui/workflow";
 
-const items = [
+export const items = [
+	{
+		label: "Home",
+		color: "cyan",
+		icon: <HomeIcon size={18} />,
+	},
 	{
 		label: "Inbound Actions",
 		color: "blue",
@@ -115,6 +121,13 @@ const items = [
 ];
 
 const colorClasses = {
+	cyan: {
+		text: "text-cyan-700",
+		border: "border-cyan-200",
+		bg: "bg-cyan-100",
+		hoverBg: "hover:bg-cyan-200",
+		hoverBorder: "hover:border-cyan-300",
+	},
 	blue: {
 		text: "text-blue-700",
 		border: "border-blue-200",
@@ -173,9 +186,12 @@ export default function NavigationMenu() {
 	const subtopic = route.pathname.split("/")[2]; // Second segment
 
 	// Find the current route from items based on topic
-	const currentRoute = items.find(
-		(item) => item.label.toLowerCase().replace(" ", "-") === topic,
-	);
+	const currentRoute =
+		route.pathname === "/"
+			? items.find((item) => item.label === "Home")
+			: items.find(
+					(item) => item.label.toLowerCase().replace(" ", "-") === topic,
+				);
 
 	// Find the current subroute if there's a subtopic
 	const currentSubRoute = currentRoute?.children?.find(
@@ -208,8 +224,14 @@ export default function NavigationMenu() {
 					<Menu.Positioner sideOffset={8}>
 						<Menu.Popup className="bg-white z-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl py-2 min-w-60">
 							{items.map((item) => {
-								const itemPath = `/${item.label.toLowerCase().replace(/ /g, "-")}`;
-								const isActive = route.pathname.startsWith(itemPath);
+								const itemPath =
+									item.label === "Home"
+										? "/"
+										: `/${item.label.toLowerCase().replace(/ /g, "-")}`;
+								const isActive =
+									item.label === "Home"
+										? route.pathname === "/"
+										: route.pathname.startsWith(itemPath);
 								const itemColors =
 									colorClasses[item.color as keyof typeof colorClasses];
 

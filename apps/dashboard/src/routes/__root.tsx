@@ -9,7 +9,6 @@ import {
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import TopBar from "@/components/layout/bar";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
-import StoreDevtools from "../lib/demo-store-devtools";
 
 interface MyRouterContext {
 	queryClient: QueryClient;
@@ -60,10 +59,13 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 		const currentPath = router.location.pathname;
 
 		const showTopBar = !pagesWithoutTopBar.includes(currentPath);
+		const noPadding =
+			currentPath.startsWith("/inbound-actions") ||
+			currentPath.startsWith("/outbound-actions");
 
 		return (
 			<>
-				<TopBar>
+				<TopBar noPadding={noPadding}>
 					<Outlet />
 				</TopBar>
 				<TanStackDevtools
@@ -76,7 +78,6 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 							render: <TanStackRouterDevtoolsPanel />,
 						},
 						TanStackQueryDevtools,
-						StoreDevtools,
 					]}
 				/>
 			</>

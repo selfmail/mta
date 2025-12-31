@@ -2,8 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ShieldCheck } from "lucide-react";
 import WorkflowEditor from "@/components/editor";
 import EndNode from "@/components/nodes/end";
+import WhitelistNode from "@/components/nodes/events/whitelist";
 import StartNode from "@/components/nodes/start";
-import WhitelistNode from "@/components/nodes/whitelist";
 
 export const Route = createFileRoute("/inbound-actions/connection")({
 	component: ConnectionEventEditor,
@@ -19,7 +19,6 @@ function ConnectionEventEditor() {
 					icon: <ShieldCheck className="w-4 h-4" />,
 					component: WhitelistNode,
 				},
-				// Add more nodes...
 			]}
 			startNode={{
 				type: "connection-start",

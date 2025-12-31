@@ -2,26 +2,20 @@ import {
 	addEdge,
 	Background,
 	type Connection,
-	Controls,
 	type Edge,
-	MiniMap,
 	type Node,
 	type NodeTypes,
 	type OnConnect,
 	ReactFlow,
+	ReactFlowProvider,
 	useEdgesState,
 	useNodesState,
+	useReactFlow,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useCallback, useMemo, useState } from "react";
-import SaveButton from "@/components/base/save-button";
-import EditorMenu from "./menu";
-import {
-	createInitialNodes,
-	createNodeFromDrop,
-	handleDragOver,
-	validateWorkflowConnection,
-} from "./utils";
+import RightSideMenu from "./menu";
+import { createInitialNodes, validateWorkflowConnection } from "./utils";
 
 export interface WorkflowEditorProps {
 	/**
@@ -63,7 +57,15 @@ export interface WorkflowEditorProps {
 	initialEdges?: Edge[];
 }
 
-export default function WorkflowEditor({
+const hey: Node = {
+	id: "sf",
+	position: { x: 0, y: 0 },
+	data: { label: "Hello" },
+	type: "input",
+};
+
+// TODO: integrate Minimap and Controls
+function WorkflowEditorInner({
 	allowedNodes,
 	startNode,
 	endNode,
@@ -84,6 +86,7 @@ export default function WorkflowEditor({
 	const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 	const [validationError, setValidationError] = useState<string>("");
 	const [isLoading, setIsLoading] = useState(false);
+	const rfInstance = useReactFlow();
 
 	// Build node types from allowed nodes, start node, and end node
 	const nodeTypes: NodeTypes = useMemo(() => {
@@ -111,90 +114,60 @@ export default function WorkflowEditor({
 		() => validateWorkflowConnection(edges),
 		[edges],
 	);
-
-	const handleSave = async () => {
-		setValidationError("");
-
-		// Validate connection
-		const isConnected = validateConnection();
-
-		if (!isConnected) {
-			setValidationError("Start node must be connected to end node");
-			return;
-		}
-
-		// If validation passes, call onSave
-		if (onSave) {
-			setIsLoading(true);
-			try {
-				await onSave(nodes, edges);
-			} catch (error) {
-				setValidationError(
-					error instanceof Error ? error.message : "Failed to save",
-				);
-			} finally {
-				setIsLoading(false);
-			}
-		}
+	const onDragOver = (event: React.DragEvent) => {
+		event.preventDefault();
+		event.dataTransfer.dropEffect = "move";
 	};
 
-	const onDragOver = useCallback(handleDragOver, []);
+	const onDrop = (event: React.DragEvent) => {
+		event.preventDefault();
 
-	const onDrop = useCallback(
-		(event: React.DragEvent) => {
-			event.preventDefault();
+		if (!rfInstance) return;
 
-			const allowedNodeTypes = allowedNodes.map((node) => node.type);
-			const newNode = createNodeFromDrop(event, allowedNodeTypes);
+		const type = event.dataTransfer.getData("application/reactflow");
+		if (!type) return;
 
-			if (newNode) {
-				setNodes((nds) => nds.concat(newNode));
-			}
-		},
-		[allowedNodes, setNodes],
-	);
+		const position = rfInstance.screenToFlowPosition({
+			x: event.clientX,
+			y: event.clientY,
+		});
 
+		const newNode: Node = {
+			id: crypto.randomUUID(),
+			type,
+			position,
+			data: { label: `${type} node` },
+		};
+
+		setNodes((nds) => nds.concat(newNode));
+	};
 	return (
-		<div className="flex h-screen w-full">
-			{/* Menu */}
-			<EditorMenu allowedNodes={allowedNodes} />
-
-			{/* Editor */}
-			<div className="flex-1 flex flex-col">
-				<div className="flex-1 relative">
-					<ReactFlow
-						nodes={nodes}
-						edges={edges}
-						onNodesChange={onNodesChange}
-						onEdgesChange={onEdgesChange}
-						onConnect={onConnect}
-						nodeTypes={nodeTypes}
-						onDragOver={onDragOver}
-						onDrop={onDrop}
-						fitView
-					>
-						<Background />
-						<Controls />
-						<MiniMap />
-					</ReactFlow>
-				</div>
-
-				{/* Footer with Save Button */}
-				<div className="p-4 border-t border-neutral-200 bg-neutral-50">
-					<div className="max-w-md mx-auto">
-						<SaveButton
-							onClick={handleSave}
-							hasError={!!validationError}
-							isLoading={isLoading}
-						/>
-						{validationError && (
-							<p className="mt-2 text-sm text-red-600 text-center">
-								{validationError}
-							</p>
-						)}
-					</div>
-				</div>
+		<div className="flex h-full w-full">
+			<div className="flex-1 relative">
+				<ReactFlow
+					className="w-full h-full"
+					nodes={nodes}
+					edges={edges}
+					onNodesChange={onNodesChange}
+					onEdgesChange={onEdgesChange}
+					onConnect={onConnect}
+					nodeTypes={nodeTypes}
+					onDragOver={onDragOver}
+					onDrop={onDrop}
+					fitView
+				>
+					<Background />
+				</ReactFlow>
+				<RightSideMenu />
 			</div>
 		</div>
+	);
+}
+
+export default function WorkflowEditor(props: WorkflowEditorProps) {
+	return (
+		<ReactFlowProvider>
+			<WorkflowEditorInner {...props} />
+		</ReactFlowProvider>
 	);
 }

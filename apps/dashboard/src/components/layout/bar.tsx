@@ -1,6 +1,12 @@
 import NavigationMenu from "./navmenu";
 
-export default function TopBar({ children }: { children: React.ReactNode }) {
+export default function TopBar({
+	children,
+	noPadding = false,
+}: {
+	children: React.ReactNode;
+	noPadding?: boolean;
+}) {
 	return (
 		<div className="h-screen w-full px-2 pb-2 flex flex-col">
 			{/* Top Bar */}
@@ -22,7 +28,9 @@ export default function TopBar({ children }: { children: React.ReactNode }) {
 				{/* TODO: add icons for a right sidebar, like notes or ai chat */}
 				<div className="flex flex-row items-center space-x-4"></div>
 			</div>
-			<main className="flex-1 min-h-0 rounded-lg border border-(--border) bg-(--background-content) p-4 overflow-y-auto">
+			<main
+				className={`flex-1 min-h-0 rounded-lg border border-(--border) bg-(--background-content) ${noPadding ? "" : "p-4"} overflow-y-auto`}
+			>
 				{children}
 			</main>
 		</div>

@@ -3,7 +3,7 @@ import { ShieldCheck } from "lucide-react";
 
 export default function WhitelistNode() {
 	return (
-		<div className="nodrag rounded-md bg-white border border-neutral-200 shadow-sm overflow-hidden">
+		<div className="rounded-md bg-white border border-neutral-200 shadow-sm overflow-hidden">
 			<Handle type="target" position={Position.Top} className="w-3 h-3" />
 
 			{/* Header section */}

@@ -1,63 +1,36 @@
-import { cn } from "@/lib/utils";
+import {} from "zustand";
 
-interface EditorMenuProps {
-	allowedNodes: Array<{
-		type: string;
-		label: string;
-		icon?: React.ReactNode;
-		component: React.ComponentType<any>;
-	}>;
-}
+const nodeTypes = [
+	{
+		type: "whitelist",
+		name: "Whitelist Node",
+	},
+];
 
-export default function EditorMenu({ allowedNodes }: EditorMenuProps) {
+export default function RightSideMenu() {
 	const onDragStart = (
-		event: React.DragEvent,
+		event: React.DragEvent<HTMLButtonElement>,
 		nodeType: string,
-		nodeLabel: string,
 	) => {
 		event.dataTransfer.setData("application/reactflow", nodeType);
-		event.dataTransfer.setData("application/reactflow-label", nodeLabel);
 		event.dataTransfer.effectAllowed = "move";
 	};
-
 	return (
-		<aside className="w-64 border-r border-neutral-200 bg-white p-4 overflow-y-auto">
-			<h3 className="text-sm font-semibold text-neutral-900 mb-4">
-				Available Nodes
-			</h3>
-
-			<div className="space-y-2">
-				{allowedNodes.map((node) => (
+		<div className="w-2/8 h-full p-4 flex flex-col space-y-4 rounded-lg absolute bg-(--background) right-0 top-0 bottom-0">
+			<h2 className="text-lg font-medium">Add Nodes to your Action</h2>
+			<div className="grid grid-cols-2 gap-4">
+				{nodeTypes.map((node) => (
 					<button
 						type="button"
 						key={node.type}
+						className="p-4 border border-(--border) rounded-lg cursor-grab bg-(--card-background)"
 						draggable
-						onDragStart={(e) => onDragStart(e, node.type, node.label)}
-						className={cn(
-							"flex items-center gap-3 p-3 rounded-lg border border-neutral-200",
-							"bg-white hover:bg-neutral-50 cursor-grab active:cursor-grabbing",
-							"transition-colors duration-150",
-						)}
+						onDragStart={(event) => onDragStart(event, node.type)}
 					>
-						{node.icon && (
-							<div className="shrink-0 w-8 h-8 rounded bg-neutral-100 flex items-center justify-center">
-								{node.icon}
-							</div>
-						)}
-						<div className="flex-1 min-w-0">
-							<p className="text-sm font-medium text-neutral-900 truncate">
-								{node.label}
-							</p>
-						</div>
+						{node.name}
 					</button>
 				))}
 			</div>
-
-			<div className="mt-6 pt-6 border-t border-neutral-200">
-				<p className="text-xs text-neutral-500">
-					Drag nodes onto the canvas to build your workflow
-				</p>
-			</div>
-		</aside>
+		</div>
 	);
 }

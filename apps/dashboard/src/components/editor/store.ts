@@ -176,7 +176,6 @@ export const useFlowStore = create<FlowState>((set, get) => ({
 	},
 }));
 
-// Cleanup on unmount
 if (typeof window !== "undefined") {
 	window.addEventListener("beforeunload", () => {
 		if (autoSaveTimeout) {

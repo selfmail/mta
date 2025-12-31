@@ -8,15 +8,13 @@ import {
 	type OnConnect,
 	ReactFlow,
 	ReactFlowProvider,
-	useEdgesState,
-	useNodesState,
 	useReactFlow,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import RightSideMenu from "./menu";
-import { createInitialNodes, validateWorkflowConnection } from "./utils";
-
+import { useFlowStore } from "./store";
+import { createInitialNodes } from "./utils";
 export interface WorkflowEditorProps {
 	/**
 	 * Array of allowed node types for this workflow
@@ -57,36 +55,46 @@ export interface WorkflowEditorProps {
 	initialEdges?: Edge[];
 }
 
-const hey: Node = {
-	id: "sf",
-	position: { x: 0, y: 0 },
-	data: { label: "Hello" },
-	type: "input",
-};
-
 // TODO: integrate Minimap and Controls
 function WorkflowEditorInner({
 	allowedNodes,
 	startNode,
 	endNode,
-	onSave,
+	onSave: _onSave,
 	initialNodes = [],
 	initialEdges = [],
 }: WorkflowEditorProps) {
-	const [nodes, setNodes, onNodesChange] = useNodesState(
-		initialNodes.length > 0
-			? initialNodes
-			: createInitialNodes(
-					startNode.type,
-					startNode.label,
-					endNode.type,
-					endNode.label,
-				),
-	);
-	const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-	const [validationError, setValidationError] = useState<string>("");
-	const [isLoading, setIsLoading] = useState(false);
+	const {
+		nodes,
+		edges,
+		setNodes,
+		setEdges,
+		onNodesChange,
+		onEdgesChange,
+		addNode,
+	} = useFlowStore();
+
 	const rfInstance = useReactFlow();
+
+	// biome-ignore lint: don't need these deps
+	useEffect(() => {
+		if (nodes.length === 0) {
+			const initialNodesData =
+				initialNodes.length > 0
+					? initialNodes
+					: createInitialNodes(
+							startNode.type,
+							startNode.label,
+							endNode.type,
+							endNode.label,
+						);
+			setNodes(initialNodesData);
+		}
+
+		if (edges.length === 0 && initialEdges.length > 0) {
+			setEdges(initialEdges);
+		}
+	}, []);
 
 	// Build node types from allowed nodes, start node, and end node
 	const nodeTypes: NodeTypes = useMemo(() => {
@@ -105,14 +113,11 @@ function WorkflowEditorInner({
 	}, [allowedNodes, startNode, endNode]);
 
 	const onConnect: OnConnect = useCallback(
-		(connection: Connection) => setEdges((eds) => addEdge(connection, eds)),
-		[setEdges],
-	);
-
-	// Function to check if start node is connected to end node
-	const validateConnection = useCallback(
-		() => validateWorkflowConnection(edges),
-		[edges],
+		(connection: Connection) => {
+			const newEdges = addEdge(connection, edges);
+			setEdges(newEdges);
+		},
+		[edges, setEdges],
 	);
 	const onDragOver = (event: React.DragEvent) => {
 		event.preventDefault();
@@ -127,9 +132,23 @@ function WorkflowEditorInner({
 		const type = event.dataTransfer.getData("application/reactflow");
 		if (!type) return;
 
+		// Get drag offset data to position the node relative to where the user grabbed it
+		const offsetData = event.dataTransfer.getData(
+			"application/reactflow-offset",
+		);
+		let offsetX = 0;
+		let offsetY = 0;
+
+		if (offsetData) {
+			const offset = JSON.parse(offsetData);
+			// Center the node by using half the width/height
+			offsetX = offset.width / 2;
+			offsetY = offset.height / 2;
+		}
+
 		const position = rfInstance.screenToFlowPosition({
-			x: event.clientX,
-			y: event.clientY,
+			x: event.clientX - offsetX,
+			y: event.clientY - offsetY,
 		});
 
 		const newNode: Node = {
@@ -139,7 +158,7 @@ function WorkflowEditorInner({
 			data: { label: `${type} node` },
 		};
 
-		setNodes((nds) => nds.concat(newNode));
+		addNode(newNode);
 	};
 	return (
 		<div className="flex h-full w-full">

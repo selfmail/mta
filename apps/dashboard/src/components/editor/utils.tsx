@@ -2,7 +2,6 @@ import type { Edge, Node } from "@xyflow/react";
 
 /**
  * Validates that there is a path from the start node to the end node
- * using breadth-first search
  */
 export function validateWorkflowConnection(
 	edges: Edge[],
@@ -51,13 +50,15 @@ export function createInitialNodes(
 		{
 			id: "start-node",
 			type: startNodeType,
-			position: { x: 250, y: 50 },
+			position: { x: 0, y: 0 },
 			data: { label: startNodeLabel },
+			deletable: false,
 		},
 		{
 			id: "end-node",
+			deletable: false,
 			type: endNodeType,
-			position: { x: 250, y: 400 },
+			position: { x: 0, y: 400 },
 			data: { label: endNodeLabel },
 		},
 	];

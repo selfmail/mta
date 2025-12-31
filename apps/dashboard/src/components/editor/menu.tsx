@@ -1,5 +1,3 @@
-import {} from "zustand";
-
 const nodeTypes = [
 	{
 		type: "whitelist",
@@ -14,6 +12,20 @@ export default function RightSideMenu() {
 	) => {
 		event.dataTransfer.setData("application/reactflow", nodeType);
 		event.dataTransfer.effectAllowed = "move";
+
+		// Store the offset from the mouse to the element's top-left corner
+		const rect = event.currentTarget.getBoundingClientRect();
+		const offsetX = event.clientX - rect.left;
+		const offsetY = event.clientY - rect.top;
+		event.dataTransfer.setData(
+			"application/reactflow-offset",
+			JSON.stringify({
+				x: offsetX,
+				y: offsetY,
+				width: rect.width,
+				height: rect.height,
+			}),
+		);
 	};
 	return (
 		<div className="w-2/8 h-full p-4 flex flex-col space-y-4 rounded-lg absolute bg-(--background) right-0 top-0 bottom-0">

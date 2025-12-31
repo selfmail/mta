@@ -3,7 +3,7 @@ import { applyEdgeChanges, applyNodeChanges } from "@xyflow/react";
 import { create } from "zustand";
 
 interface FlowState {
-	eventId: string;
+	event: string;
 	selectedNodeId: string | null;
 	nodes: Node[];
 	edges: Edge[];
@@ -29,7 +29,7 @@ interface FlowState {
 	selectNode: (nodeId: string | null) => void;
 	getSelectedNode: () => Node | undefined;
 
-	setEventId: (eventId: string) => void;
+	setEvent: (event: string) => void;
 
 	// Auto-save
 	saveToBackend: () => Promise<void>;
@@ -40,7 +40,7 @@ let autoSaveTimeout: NodeJS.Timeout | null = null;
 const AUTO_SAVE_DELAY = 2000; // 2 seconds
 
 export const useFlowStore = create<FlowState>((set, get) => ({
-	eventId: "",
+	event: "",
 	selectedNodeId: null,
 	nodes: [],
 	edges: [],
@@ -125,9 +125,8 @@ export const useFlowStore = create<FlowState>((set, get) => ({
 	},
 
 	// Event ID
-	setEventId: (eventId) => set({ eventId }),
+	setEvent: (event) => set({ event }),
 
-	// Auto-save with debouncing
 	triggerAutoSave: () => {
 		// Clear existing timeout
 		if (autoSaveTimeout) {
@@ -144,15 +143,17 @@ export const useFlowStore = create<FlowState>((set, get) => ({
 	},
 
 	saveToBackend: async () => {
-		const { eventId, nodes, edges, isDirty } = get();
+		const { event, nodes, edges, isDirty } = get();
 
 		if (!isDirty) return;
 
 		set({ isSaving: true });
 
+		// Create schema for saving
+
 		try {
 			// API call to save workflow
-			const response = await fetch(`/api/workflows/${eventId}`, {
+			const response = await fetch(`/api/workflows/${event}`, {
 				method: "PUT",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ nodes, edges }),

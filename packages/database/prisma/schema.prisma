@@ -30,3 +30,12 @@ model Session {
   createdAt DateTime @default(now())
   expiresAt DateTime
 }
+
+// Schema for the smtp events
+model Event {
+  id        String   @id @default(cuid())
+  event     String   @unique
+  data      Json
+  ui        Json
+  updatedAt DateTime @updatedAt
+}

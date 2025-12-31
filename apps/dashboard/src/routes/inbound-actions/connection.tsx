@@ -12,6 +12,7 @@ export const Route = createFileRoute("/inbound-actions/connection")({
 function ConnectionEventEditor() {
 	return (
 		<WorkflowEditor
+			event="inbound-connection"
 			allowedNodes={[
 				{
 					type: "whitelist",

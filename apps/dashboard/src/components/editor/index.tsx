@@ -16,6 +16,7 @@ import RightSideMenu from "./menu";
 import { useFlowStore } from "./store";
 import { createInitialNodes } from "./utils";
 export interface WorkflowEditorProps {
+	event: string;
 	/**
 	 * Array of allowed node types for this workflow
 	 */
@@ -62,6 +63,7 @@ function WorkflowEditorInner({
 	endNode,
 	onSave: _onSave,
 	initialNodes = [],
+	event,
 	initialEdges = [],
 }: WorkflowEditorProps) {
 	const {
@@ -71,11 +73,19 @@ function WorkflowEditorInner({
 		setEdges,
 		onNodesChange,
 		onEdgesChange,
+		setEvent,
 		addNode,
 	} = useFlowStore();
 
+	useEffect(() => {
+		setEvent(event);
+	}, [event, setEvent]);
+
+	// Fetching default nodes and edges from db
+
 	const rfInstance = useReactFlow();
 
+	// Initialising default nodes
 	// biome-ignore lint: don't need these deps
 	useEffect(() => {
 		if (nodes.length === 0) {

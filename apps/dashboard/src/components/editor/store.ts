@@ -1,12 +1,14 @@
 import type { Edge, EdgeChange, Node, NodeChange } from "@xyflow/react";
 import { applyEdgeChanges, applyNodeChanges } from "@xyflow/react";
 import { create } from "zustand";
+import { validateWorkflowConnection } from "./utils";
 
 interface FlowState {
 	event: string;
 	selectedNodeId: string | null;
 	nodes: Node[];
 	edges: Edge[];
+	error: string | null;
 	isDirty: boolean;
 	isSaving: boolean;
 	lastSaved: Date | null;
@@ -31,6 +33,8 @@ interface FlowState {
 
 	setEvent: (event: string) => void;
 
+	setError: (errorMessage: string | null) => void;
+
 	// Auto-save
 	saveToBackend: () => Promise<void>;
 	triggerAutoSave: () => void;
@@ -47,6 +51,7 @@ export const useFlowStore = create<FlowState>((set, get) => ({
 	isDirty: false,
 	isSaving: false,
 	lastSaved: null,
+	error: null,
 
 	setNodes: (nodes) => {
 		set({ nodes, isDirty: true });
@@ -127,6 +132,8 @@ export const useFlowStore = create<FlowState>((set, get) => ({
 	// Event ID
 	setEvent: (event) => set({ event }),
 
+	setError: (errorMessage: string | null) => set({ error: errorMessage }),
+
 	triggerAutoSave: () => {
 		// Clear existing timeout
 		if (autoSaveTimeout) {
@@ -148,6 +155,22 @@ export const useFlowStore = create<FlowState>((set, get) => ({
 		if (!isDirty) return;
 
 		set({ isSaving: true });
+		set({ error: null });
+
+		// Validate workflow connection
+		const connected = validateWorkflowConnection(
+			edges,
+			"start-node",
+			"end-node",
+		);
+
+		if (!connected) {
+			set({
+				isSaving: false,
+				error: "Workflow is not fully connected from start to end node.",
+			});
+			return;
+		}
 
 		// Create schema for saving
 

@@ -1,3 +1,5 @@
+import { useNodeDnD } from "./useNodeDnD";
+
 const nodeTypes = [
 	{
 		type: "whitelist",
@@ -6,27 +8,8 @@ const nodeTypes = [
 ];
 
 export default function RightSideMenu() {
-	const onDragStart = (
-		event: React.DragEvent<HTMLButtonElement>,
-		nodeType: string,
-	) => {
-		event.dataTransfer.setData("application/reactflow", nodeType);
-		event.dataTransfer.effectAllowed = "move";
+	const { startDrag, drag } = useNodeDnD();
 
-		// Store the offset from the mouse to the element's top-left corner
-		const rect = event.currentTarget.getBoundingClientRect();
-		const offsetX = event.clientX - rect.left;
-		const offsetY = event.clientY - rect.top;
-		event.dataTransfer.setData(
-			"application/reactflow-offset",
-			JSON.stringify({
-				x: offsetX,
-				y: offsetY,
-				width: rect.width,
-				height: rect.height,
-			}),
-		);
-	};
 	return (
 		<div className="w-2/8 h-full p-4 flex flex-col space-y-4 rounded-lg absolute bg-(--background) right-0 top-0 bottom-0">
 			<h2 className="text-lg font-medium">Add Nodes to your Action</h2>
@@ -35,9 +18,12 @@ export default function RightSideMenu() {
 					<button
 						type="button"
 						key={node.type}
-						className="p-4 border border-(--border) rounded-lg cursor-grab bg-(--card-background)"
-						draggable
-						onDragStart={(event) => onDragStart(event, node.type)}
+						className="p-4 border border-(--border) rounded-lg cursor-grab bg-(--card-background) select-none transition-transform active:scale-95 hover:shadow-lg"
+						onPointerDown={(e) => startDrag(e, node.type, node.name)}
+						style={{
+							opacity: drag?.type === node.type ? 0.5 : 1,
+							touchAction: "none",
+						}}
 					>
 						{node.name}
 					</button>

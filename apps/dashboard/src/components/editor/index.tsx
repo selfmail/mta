@@ -11,9 +11,10 @@ import {
 	useReactFlow,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import RightSideMenu from "./menu";
 import { useFlowStore } from "./store";
+import { NodeDnDProvider, useNodeDnD } from "./useNodeDnD";
 import { createInitialNodes } from "./utils";
 export interface WorkflowEditorProps {
 	event: string;
@@ -75,7 +76,11 @@ function WorkflowEditorInner({
 		onEdgesChange,
 		setEvent,
 		addNode,
+		error,
 	} = useFlowStore();
+
+	const { drag, endDrag } = useNodeDnD();
+	const reactFlowWrapper = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		setEvent(event);
@@ -129,6 +134,31 @@ function WorkflowEditorInner({
 		},
 		[edges, setEdges],
 	);
+
+	// Handle custom drag & drop
+	const onCanvasPointerUp = useCallback(
+		(event: React.PointerEvent) => {
+			if (!drag || !rfInstance || !reactFlowWrapper.current) return;
+
+			const bounds = reactFlowWrapper.current.getBoundingClientRect();
+			const position = rfInstance.screenToFlowPosition({
+				x: event.clientX - bounds.left,
+				y: event.clientY - bounds.top,
+			});
+
+			const newNode: Node = {
+				id: crypto.randomUUID(),
+				type: drag.type,
+				position,
+				data: { label: drag.label },
+			};
+
+			addNode(newNode);
+			endDrag();
+		},
+		[drag, rfInstance, addNode, endDrag],
+	);
+
 	const onDragOver = (event: React.DragEvent) => {
 		event.preventDefault();
 		event.dataTransfer.dropEffect = "move";
@@ -172,7 +202,15 @@ function WorkflowEditorInner({
 	};
 	return (
 		<div className="flex h-full w-full">
-			<div className="flex-1 relative">
+			<div
+				ref={reactFlowWrapper}
+				className="flex-1 relative"
+				onPointerUp={onCanvasPointerUp}
+				style={{
+					backgroundColor: drag ? "rgba(0, 0, 0, 0.02)" : undefined,
+					transition: "background-color 200ms",
+				}}
+			>
 				<ReactFlow
 					className="w-full h-full"
 					nodes={nodes}
@@ -196,7 +234,9 @@ function WorkflowEditorInner({
 export default function WorkflowEditor(props: WorkflowEditorProps) {
 	return (
 		<ReactFlowProvider>
-			<WorkflowEditorInner {...props} />
+			<NodeDnDProvider>
+				<WorkflowEditorInner {...props} />
+			</NodeDnDProvider>
 		</ReactFlowProvider>
 	);
 }

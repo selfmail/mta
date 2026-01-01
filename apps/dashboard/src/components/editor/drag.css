@@ -1,0 +1,16 @@
+/* Ghost Node Animation */
+@keyframes pop {
+	0% {
+		scale: 0.9;
+		opacity: 0;
+	}
+	100% {
+		scale: 1.05;
+		opacity: 0.85;
+	}
+}
+
+.ghost-node {
+	animation: pop 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
+	will-change: transform, opacity;
+}

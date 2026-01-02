@@ -1,3 +1,4 @@
+import type { DataSchemaTS } from "@mta/schema";
 import type { Edge, Node } from "@xyflow/react";
 
 /**
@@ -64,46 +65,7 @@ export function createInitialNodes(
 	];
 }
 
-/**
- * Handler for drag over events in the workflow editor
- */
-export function handleDragOver(event: React.DragEvent) {
-	event.preventDefault();
-	event.dataTransfer.dropEffect = "move";
-}
-
-/**
- * Creates a new node from a drop event
- */
-export function createNodeFromDrop(
-	event: React.DragEvent,
-	allowedNodeTypes: string[],
-): Node | null {
-	const nodeType = event.dataTransfer.getData("application/reactflow");
-	const nodeLabel = event.dataTransfer.getData("application/reactflow-label");
-
-	// Check if the node type is allowed
-	if (!allowedNodeTypes.includes(nodeType)) {
-		return null;
-	}
-
-	const reactFlowBounds = (event.target as HTMLElement)
-		.closest(".react-flow")
-		?.getBoundingClientRect();
-
-	if (!reactFlowBounds) {
-		return null;
-	}
-
-	const position = {
-		x: event.clientX - reactFlowBounds.left,
-		y: event.clientY - reactFlowBounds.top,
-	};
-
-	return {
-		id: `${nodeType}-${Date.now()}`,
-		type: nodeType,
-		position,
-		data: { label: nodeLabel || nodeType },
-	};
+// TODO: Implement function to create data schema from nodes and edges
+export function createDataSchema(nodes: Node[], edges: Edge[]): DataSchemaTS {
+	// Go through nodes and edges, create data schema
 }

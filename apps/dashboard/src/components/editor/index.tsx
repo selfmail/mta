@@ -76,6 +76,7 @@ function WorkflowEditorInner({
 		onEdgesChange,
 		setEvent,
 		addNode,
+		selectNode,
 		error,
 	} = useFlowStore();
 
@@ -134,6 +135,10 @@ function WorkflowEditorInner({
 		},
 		[edges, setEdges],
 	);
+
+	const onPaneClick = useCallback(() => {
+		selectNode(null);
+	}, [selectNode]);
 
 	// Handle custom drag & drop
 	const onCanvasPointerUp = useCallback(
@@ -218,6 +223,7 @@ function WorkflowEditorInner({
 					onNodesChange={onNodesChange}
 					onEdgesChange={onEdgesChange}
 					onConnect={onConnect}
+					onPaneClick={onPaneClick}
 					nodeTypes={nodeTypes}
 					onDragOver={onDragOver}
 					onDrop={onDrop}

@@ -1,40 +1,88 @@
-import { Handle, Position } from "@xyflow/react";
-import { ShieldCheck } from "lucide-react";
+import { type NodeProps, NodeToolbar, Position } from "@xyflow/react";
+import { CopyIcon, Trash2 } from "lucide-react";
+import { useEffect } from "react";
+import { useFlowStore } from "@/components/editor/store";
+import { cn } from "@/lib/utils";
 
-export default function WhitelistNode() {
+interface WhitelistProps extends NodeProps {
+	id: string;
+}
+
+export default function WhitelistNode({ id }: WhitelistProps) {
+	const { selectNode, selectedNodeId, removeNode } = useFlowStore();
+	const isSelected = selectedNodeId === id;
+
+	const handleDelete = () => {
+		removeNode(id);
+		selectNode(null);
+	};
+
+	useEffect(() => {
+		if (isSelected) {
+			// Watch for delete keyboard input and esc to deselect
+			const handleKeyDown = (e: KeyboardEvent) => {
+				if (e.key === "Delete" || e.key === "Backspace") {
+					handleDelete();
+				} else if (e.key === "Escape") {
+					selectNode(null);
+				}
+			};
+			window.addEventListener("keydown", handleKeyDown);
+			return () => {
+				window.removeEventListener("keydown", handleKeyDown);
+			};
+		}
+		// Deselect node when unmounting
+		return () => {
+			if (selectedNodeId === id) {
+				selectNode(null);
+			}
+		};
+	});
+
 	return (
-		<div className="rounded-md bg-white border border-neutral-200 shadow-sm overflow-hidden">
-			<Handle type="target" position={Position.Top} className="w-3 h-3" />
-
-			{/* Header section */}
-			<div className="flex items-center gap-2 px-3 py-2">
-				{/* Icon */}
-				<div className="apps/dashboard/src/components/nodes/whitelist.tsxshrink-0 w-6 h-6 rounded bg-purple-100 flex items-center justify-center">
-					<ShieldCheck className="w-3.5 h-3.5 text-purple-600" />
+		<>
+			<NodeToolbar isVisible={isSelected} position={Position.Top} align="start">
+				<div className="flex bg-white flex-row space-x-2 p-1 rounded-md border border-(--border)">
+					<button
+						type="button"
+						className="hover:bg-neutral-100 transition-colors rounded-sm p-2"
+						onClick={handleDelete}
+					>
+						<Trash2 className="w-4 h-4 text-neutral-600" />
+					</button>
+					<button
+						type="button"
+						className="hover:bg-neutral-100 transition-colors rounded-sm p-2"
+						onClick={handleDelete}
+					>
+						<CopyIcon className="w-4 h-4 text-neutral-600" />
+					</button>
 				</div>
-
-				{/* Title */}
-				<div className="flex-1 min-w-0">
-					<p className="text-xs font-medium text-neutral-900">Whitelist</p>
-				</div>
-			</div>
-
-			<Handle
-				type="source"
-				id={"1"}
-				position={Position.Bottom}
-				className="w-3 h-3"
-			/>
-			{/* Handle for errors */}
-			<Handle
-				type="source"
-				id={"2"}
-				position={Position.Right}
-				className="w-2 h-2"
-				style={{
-					backgroundColor: "red",
+			</NodeToolbar>
+			<button
+				type="button"
+				onClick={(e) => {
+					e.stopPropagation();
+					selectNode(id);
 				}}
-			/>
-		</div>
+				className={cn(
+					"bg-white  text-sm cursor-pointer rounded-lg border shadow-sm text-left transition-all",
+					isSelected
+						? "border-blue-500 shadow-[0_0_0_1px_rgba(59,130,246,0.3)]"
+						: "border-(--border)",
+				)}
+			>
+				<div className="p-2 rounded-t-lg flex font-medium flex-row">
+					Whitelist
+				</div>
+				<div className="p-2 items-center text-neutral-600 rounded-b-lg border-t border-(--border) flex flex-row">
+					Only allow specified{" "}
+					<code className="rounded-sm ml-1 p-0.5 bg-neutral-100 border border-neutral-200">
+						IP Addresses
+					</code>
+				</div>
+			</button>
+		</>
 	);
 }

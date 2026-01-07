@@ -1,0 +1,40 @@
+## Codebase Patterns
+- React Flow: Nodes only need target handle on top when flow stops there (no source handle)
+- Icons: Use lucide-react icons for consistent UI
+- CSS: Use CSS custom properties (--background, --text-primary, etc.) for theming with media query fallback
+- Node selection: Use useFlowStore's selectNode with keyboard handling (Escape to deselect, Delete/Backspace to remove)
+- Node toolbar: Use NodeToolbar with isVisible={isSelected} and Position.Top for action buttons when selected
+
+## 2026-01-07 - Allow only light mode
+- Removed @custom-variant dark directive from styles.css
+- Removed dark mode media query block with all dark CSS variables
+- UI now uses only light mode color values
+
+**Learnings:**
+- Dark mode was implemented using @custom-variant dark for Tailwind and @media (prefers-color-scheme: dark) for CSS variables
+- No .dark class usage elsewhere in codebase - only the custom variant was needed
+- CSS variables for shadows use rgba with low opacity in light mode (0.05-0.15)
+
+## 2026-01-07 - Revamp Ban Node
+- Updated BanNode with CircleSlash icon to indicate ban/stop status visually
+- Added clearer red border styling to emphasize ban state
+- Only has target handle on top (flow stops after ban) - already implemented
+- Updated BanMenuPreview with BanIcon and circular badge design for consistency
+
+**Learnings:**
+- Menu previews use rounded-full bg-red-100 containers with icons for visual distinction
+- Ban nodes use red-200 borders by default and red-500 when selected
+- CircleSlash icon better communicates "banned/stopped" state than generic Ban icon
+
+## 2026-01-07 - Create new API-Call Node
+- Created ApiCallNode component with Globe icon and blue theme styling
+- Added target handle on top and source handle on bottom for flow continuity
+- Added NodeToolbar with delete and copy buttons when selected
+- Created ApiCallMenuPreview for the drag-drop menu with circular badge design
+- Registered the node in both inbound and outbound connection workflows
+
+**Learnings:**
+- API-Call nodes need both target (top) and source (bottom) handles since the flow continues after making a request
+- NodeToolbar appears above the node when isSelected is true, aligned to the start
+- Menu previews use consistent layout: icon in rounded-full container + text description
+- Node registration requires adding to: nodeTypes array in menu/index.tsx AND allowedNodes in each route file

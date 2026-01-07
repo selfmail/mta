@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ShieldCheck } from "lucide-react";
+import { Globe, ShieldCheck } from "lucide-react";
 import WorkflowEditor from "@/components/editor";
+import ApiCallNode from "@/components/nodes/actions/api-call";
 import EndNode from "@/components/nodes/end";
 import WhitelistNode from "@/components/nodes/events/whitelist";
+import BanNode from "@/components/nodes/fails/ban";
 import StartNode from "@/components/nodes/start";
 
 export const Route = createFileRoute("/outbound-actions/connection")({
@@ -12,6 +14,7 @@ export const Route = createFileRoute("/outbound-actions/connection")({
 function ConnectionEventEditor() {
 	return (
 		<WorkflowEditor
+			event="outbound-connection"
 			allowedNodes={[
 				{
 					type: "whitelist",
@@ -19,7 +22,17 @@ function ConnectionEventEditor() {
 					icon: <ShieldCheck className="w-4 h-4" />,
 					component: WhitelistNode,
 				},
-				// Add more nodes...
+				{
+					type: "ban",
+					label: "Ban",
+					component: BanNode,
+				},
+				{
+					type: "api-call",
+					label: "API Call",
+					icon: <Globe className="w-4 h-4" />,
+					component: ApiCallNode,
+				},
 			]}
 			startNode={{
 				type: "connection-start",

@@ -1,5 +1,7 @@
 import WhitelistMenuPreview from "../menu-previews/whitelist";
 import BlockMenuPreview from "../menu-previews/block";
+import BanMenuPreview from "../menu-previews/ban";
+import ApiCallMenuPreview from "../menu-previews/api-call";
 import { useFlowStore } from "../store";
 import { useNodeDnD } from "../useNodeDnD";
 import WhitelistMenu from "./whitelist-menu";
@@ -20,6 +22,16 @@ export const nodeTypes: MenuNode[] = [
 		type: "block",
 		name: "Block",
 		preview: BlockMenuPreview,
+	},
+	{
+		type: "ban",
+		name: "Ban",
+		preview: BanMenuPreview,
+	},
+	{
+		type: "api-call",
+		name: "API Call",
+		preview: ApiCallMenuPreview,
 	},
 ];
 

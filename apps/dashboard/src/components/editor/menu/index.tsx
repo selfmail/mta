@@ -1,4 +1,5 @@
 import WhitelistMenuPreview from "../menu-previews/whitelist";
+import BlockMenuPreview from "../menu-previews/block";
 import { useFlowStore } from "../store";
 import { useNodeDnD } from "../useNodeDnD";
 import WhitelistMenu from "./whitelist-menu";
@@ -14,6 +15,11 @@ export const nodeTypes: MenuNode[] = [
 		type: "whitelist",
 		name: "Whitelist",
 		preview: WhitelistMenuPreview,
+	},
+	{
+		type: "block",
+		name: "Block",
+		preview: BlockMenuPreview,
 	},
 ];
 
@@ -37,7 +43,6 @@ export default function RightSideMenu() {
 	const handlePointerUp = (e: React.PointerEvent) => {
 		// Stop propagation to prevent canvas from receiving the event
 		e.stopPropagation();
-		// End the drag operation if one is active
 		if (drag) {
 			endDrag();
 		}

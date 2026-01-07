@@ -8,6 +8,10 @@
 /* biome-ignore lint: need this */
 @plugin "@toolwind/corner-shape";
 
+html {
+	overscroll-behavior: none;
+}
+
 * {
 	box-sizing: border-box;
 	font-family: "DM Sans", sans-serif;

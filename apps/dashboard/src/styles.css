@@ -3,9 +3,6 @@
 @import "tw-animate-css";
 
 /* biome-ignore lint: need this */
-@custom-variant dark (&:is(.dark *));
-
-/* biome-ignore lint: need this */
 @plugin "@toolwind/corner-shape";
 
 html {
@@ -32,22 +29,6 @@ html {
 	--shadow-sm: rgba(0, 0, 0, 0.05);
 	--shadow-md: rgba(0, 0, 0, 0.1);
 	--shadow-lg: rgba(0, 0, 0, 0.15);
-}
-
-@media (prefers-color-scheme: dark) {
-	:root {
-		--background: #0a0a0a;
-		--background-content: #1a1a1a;
-		--text-primary: #f5f5f5;
-		--text-secondary: #a3a3a3;
-
-		--border: #2e2e2e;
-		--border-hover: #404040;
-
-		--shadow-sm: rgba(0, 0, 0, 0.3);
-		--shadow-md: rgba(0, 0, 0, 0.5);
-		--shadow-lg: rgba(0, 0, 0, 0.7);
-	}
 }
 
 body {

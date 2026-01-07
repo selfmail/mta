@@ -2,26 +2,20 @@ import { Handle, Position } from "@xyflow/react";
 import { CircleCheck } from "lucide-react";
 
 export default function EndNode() {
-	return (
-		<div className="rounded-md bg-white border-2 border-blue-500 shadow-sm overflow-hidden">
-			<Handle
-				type="target"
-				position={Position.Top}
-				className="w-3 h-3 bg-blue-500"
-			/>
+  return (
+    <div className="w-32 overflow-hidden border border-neutral-200 border-b-2 bg-white shadow-sm">
+      <Handle
+        className="size-2! rounded-none! border-none! bg-blue-500!"
+        position={Position.Top}
+        type="target"
+      />
 
-			{/* Header section */}
-			<div className="flex items-center gap-2 px-3 py-2 bg-blue-50">
-				{/* Icon */}
-				<div className="shrink-0 w-6 h-6 rounded bg-blue-500 flex items-center justify-center">
-					<CircleCheck className="w-3.5 h-3.5 text-white" />
-				</div>
-
-				{/* Title */}
-				<div className="flex-1 min-w-0">
-					<p className="text-xs font-semibold text-blue-900">End</p>
-				</div>
-			</div>
-		</div>
-	);
+      <div className="flex items-center gap-2 p-2">
+        <div className="flex h-6 w-6 shrink-0 items-center justify-center bg-blue-100">
+          <CircleCheck className="h-3.5 w-3.5 text-blue-600" />
+        </div>
+        <p className="font-medium text-neutral-900 text-xs">End</p>
+      </div>
+    </div>
+  );
 }

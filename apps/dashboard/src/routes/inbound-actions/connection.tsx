@@ -8,46 +8,46 @@ import BanNode from "@/components/nodes/fails/ban";
 import StartNode from "@/components/nodes/start";
 
 export const Route = createFileRoute("/inbound-actions/connection")({
-	component: ConnectionEventEditor,
+  component: ConnectionEventEditor,
 });
 
 function ConnectionEventEditor() {
-	return (
-		<WorkflowEditor
-			event="inbound-connection"
-			allowedNodes={[
-				{
-					type: "whitelist",
-					label: "Whitelist",
-					icon: <ShieldCheck className="w-4 h-4" />,
-					component: WhitelistNode,
-				},
-				{
-					type: "ban",
-					label: "Ban",
-					component: BanNode,
-				},
-				{
-					type: "api-call",
-					label: "API Call",
-					icon: <Globe className="w-4 h-4" />,
-					component: ApiCallNode,
-				},
-			]}
-			startNode={{
-				type: "connection-start",
-				label: "Connection Start",
-				component: StartNode,
-			}}
-			endNode={{
-				type: "connection-end",
-				label: "Connection End",
-				component: EndNode,
-			}}
-			onSave={(nodes, edges) => {
-				console.log("Saving workflow:", { nodes, edges });
-				// Your save logic here
-			}}
-		/>
-	);
+  return (
+    <WorkflowEditor
+      allowedNodes={[
+        {
+          type: "whitelist",
+          label: "Whitelist",
+          icon: <ShieldCheck className="h-4 w-4" />,
+          component: WhitelistNode,
+        },
+        {
+          type: "ban",
+          label: "Ban",
+          component: BanNode,
+        },
+        {
+          type: "api-call",
+          label: "API Call",
+          icon: <Globe className="h-4 w-4" />,
+          component: ApiCallNode,
+        },
+      ]}
+      endNode={{
+        type: "connection-end",
+        label: "Connection End",
+        component: EndNode,
+      }}
+      event="inbound-connection"
+      onSave={(nodes, edges) => {
+        console.log("Saving workflow:", { nodes, edges });
+        // Your save logic here
+      }}
+      startNode={{
+        type: "connection-start",
+        label: "Connection Start",
+        component: StartNode,
+      }}
+    />
+  );
 }

@@ -1,28 +1,28 @@
 {
-	"branchName": "ralph/features",
-	"features": [
-		{
-			"feature": "Revamp Ban Node",
-			"criteria": [
-				"Design the Node Red to indicate ban status",
-				"Only has a handle on top because the connect will stopped after that"
-			],
-			"passes": true
-		},
-		{
-			"feature": "Allow only light mode",
-			"criteria": [
-				"Remove dark mode option from styles.css",
-				"Ensure all UI elements are optimized for light mode, with the tailwind colors"
-			],
-			"passes": true
-		},
-		{
-			"feature": "Create new API-Call Node",
-			"criteria": [
-				"Design Preview and Node for an API-Call for the react flow editor"
-			],
-			"passes": true
-		}
-	]
+  "branchName": "ralph/features",
+  "features": [
+    {
+      "feature": "Revamp Ban Node",
+      "criteria": [
+        "Design the Node Red to indicate ban status",
+        "Only has a handle on top because the connect will stopped after that"
+      ],
+      "passes": true
+    },
+    {
+      "feature": "Allow only light mode",
+      "criteria": [
+        "Remove dark mode option from styles.css",
+        "Ensure all UI elements are optimized for light mode, with the tailwind colors"
+      ],
+      "passes": true
+    },
+    {
+      "feature": "Create new API-Call Node",
+      "criteria": [
+        "Design Preview and Node for an API-Call for the react flow editor"
+      ],
+      "passes": true
+    }
+  ]
 }

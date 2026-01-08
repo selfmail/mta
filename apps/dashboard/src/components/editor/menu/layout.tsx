@@ -3,13 +3,14 @@ import { ArrowLeft } from "lucide-react";
 import Button from "@/components/base/button";
 import { useFlowStore } from "../store";
 import { nodeTypes } from ".";
+import { deselectNode } from "./deselect";
 
 interface MenuLayoutProps {
   children: React.ReactNode;
 }
 
 export function MenuLayout({ children }: MenuLayoutProps) {
-  const { selectNode, getSelectedNode } = useFlowStore();
+  const { getSelectedNode, selectNode, nodes, setNodes } = useFlowStore();
   const selectedNode = getSelectedNode();
   const title =
     nodeTypes.find((n) => n.type === selectedNode?.type)?.name || "Menu";
@@ -18,7 +19,14 @@ export function MenuLayout({ children }: MenuLayoutProps) {
       <div className="flex items-center gap-2 p-2">
         <Button
           className="h-8 w-8"
-          onClick={() => selectNode(null)}
+          onClick={() =>
+            deselectNode({
+              getSelectedNode,
+              nodes,
+              selectNode,
+              setNodes,
+            })
+          }
           size="icon"
           variant="ghost"
         >

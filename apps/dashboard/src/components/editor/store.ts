@@ -3,207 +3,237 @@ import { applyEdgeChanges, applyNodeChanges } from "@xyflow/react";
 import { create } from "zustand";
 import { validateWorkflowConnection } from "./utils";
 
-interface FlowState {
-	event: string;
-	selectedNodeId: string | null;
-	nodes: Node[];
-	edges: Edge[];
-	error: string | null;
-	isDirty: boolean;
-	isSaving: boolean;
-	lastSaved: Date | null;
+export interface FlowState {
+  event: string;
+  selectedNodeId: string | null;
+  nodes: Node[];
+  edges: Edge[];
+  error: string | null;
+  isDirty: boolean;
+  isSaving: boolean;
+  lastSaved: Date | null;
 
-	// Basic methods for React Flow
-	setNodes: (nodes: Node[]) => void;
-	setEdges: (edges: Edge[]) => void;
-	onNodesChange: (changes: NodeChange[]) => void;
-	onEdgesChange: (changes: EdgeChange[]) => void;
+  // Basic methods for React Flow
+  setNodes: (nodes: Node[]) => void;
+  setEdges: (edges: Edge[]) => void;
+  onNodesChange: (changes: NodeChange[]) => void;
+  onEdgesChange: (changes: EdgeChange[]) => void;
 
-	// Handle Notes
-	addNode: (node: Node) => void;
-	removeNode: (nodeId: string) => void;
+  // Handle Notes
+  addNode: (node: Node) => void;
+  removeNode: (nodeId: string) => void;
+  copyNode: (nodeId: string) => void;
 
-	// Save data changes from a node
-	updateNodeData: <T = unknown>(nodeId: string, data: Partial<T>) => void;
-	setNodeData: <T = unknown>(nodeId: string, data: T) => void;
+  // Save data changes from a node
+  updateNodeData: <T = unknown>(nodeId: string, data: Partial<T>) => void;
+  setNodeData: <T = unknown>(nodeId: string, data: T) => void;
 
-	// Selection methods for menu
-	selectNode: (nodeId: string | null) => void;
-	getSelectedNode: () => Node | undefined;
+  // Selection methods for menu
+  selectNode: (nodeId: string | null) => void;
+  getSelectedNode: () => Node | undefined;
 
-	setEvent: (event: string) => void;
+  setEvent: (event: string) => void;
 
-	setError: (errorMessage: string | null) => void;
+  setError: (errorMessage: string | null) => void;
 
-	// Auto-save
-	saveToBackend: () => Promise<void>;
-	triggerAutoSave: () => void;
+  // Auto-save
+  saveToBackend: () => Promise<void>;
+  triggerAutoSave: () => void;
 }
 
 let autoSaveTimeout: NodeJS.Timeout | null = null;
 const AUTO_SAVE_DELAY = 2000; // 2 seconds
 
 export const useFlowStore = create<FlowState>((set, get) => ({
-	event: "",
-	selectedNodeId: null,
-	nodes: [],
-	edges: [],
-	isDirty: false,
-	isSaving: false,
-	lastSaved: null,
-	error: null,
+  event: "",
+  selectedNodeId: null,
+  nodes: [],
+  edges: [],
+  isDirty: false,
+  isSaving: false,
+  lastSaved: null,
+  error: null,
 
-	setNodes: (nodes) => {
-		set({ nodes, isDirty: true });
-		get().triggerAutoSave();
-	},
+  setNodes: (nodes) => {
+    set({ nodes, isDirty: true });
+    get().triggerAutoSave();
+  },
 
-	setEdges: (edges) => {
-		set({ edges, isDirty: true });
-		get().triggerAutoSave();
-	},
+  setEdges: (edges) => {
+    set({ edges, isDirty: true });
+    get().triggerAutoSave();
+  },
 
-	onNodesChange: (changes) => {
-		set({
-			nodes: applyNodeChanges(changes, get().nodes),
-			isDirty: true,
-		});
-		get().triggerAutoSave();
-	},
+  onNodesChange: (changes) => {
+    set({
+      nodes: applyNodeChanges(changes, get().nodes),
+      isDirty: true,
+    });
+    get().triggerAutoSave();
+  },
 
-	onEdgesChange: (changes) => {
-		set({
-			edges: applyEdgeChanges(changes, get().edges),
-			isDirty: true,
-		});
-		get().triggerAutoSave();
-	},
+  onEdgesChange: (changes) => {
+    set({
+      edges: applyEdgeChanges(changes, get().edges),
+      isDirty: true,
+    });
+    get().triggerAutoSave();
+  },
 
-	addNode: (node) => {
-		set((state) => ({
-			nodes: [...state.nodes, node],
-			isDirty: true,
-		}));
-		get().triggerAutoSave();
-	},
+  addNode: (node) => {
+    set((state) => ({
+      nodes: [...state.nodes, node],
+      isDirty: true,
+    }));
+    get().triggerAutoSave();
+  },
 
-	removeNode: (nodeId) => {
-		set((state) => ({
-			nodes: state.nodes.filter((node) => node.id !== nodeId),
-			edges: state.edges.filter(
-				(edge) => edge.source !== nodeId && edge.target !== nodeId,
-			),
-			isDirty: true,
-		}));
-		get().triggerAutoSave();
-	},
+  removeNode: (nodeId) => {
+    set((state) => ({
+      nodes: state.nodes.filter((node) => node.id !== nodeId),
+      edges: state.edges.filter(
+        (edge) => edge.source !== nodeId && edge.target !== nodeId
+      ),
+      isDirty: true,
+    }));
+    get().triggerAutoSave();
+  },
 
-	updateNodeData: (nodeId, data) => {
-		set((state) => ({
-			nodes: state.nodes.map((node) =>
-				node.id === nodeId
-					? { ...node, data: { ...node.data, ...data } }
-					: node,
-			),
-			isDirty: true,
-		}));
-		get().triggerAutoSave();
-	},
+  copyNode: (nodeId) => {
+    const { nodes } = get();
+    const nodeToCopy = nodes.find((node) => node.id === nodeId);
+    if (!nodeToCopy) {
+      return;
+    }
 
-	setNodeData: (nodeId, data) => {
-		set((state) => ({
-			nodes: state.nodes.map((node) =>
-				node.id === nodeId
-					? { ...node, data: data as Record<string, unknown> }
-					: node,
-			),
-			isDirty: true,
-		}));
-		get().triggerAutoSave();
-	},
+    // Generate new unique ID
+    const newId = `${nodeToCopy.type}-${Date.now()}`;
 
-	selectNode: (nodeId) => set({ selectedNodeId: nodeId }),
+    // Create copy with offset position
+    const copiedNode: Node = {
+      ...nodeToCopy,
+      id: newId,
+      position: {
+        x: nodeToCopy.position.x + 50,
+        y: nodeToCopy.position.y + 50,
+      },
+      selected: false,
+      data: { ...nodeToCopy.data },
+    };
 
-	getSelectedNode: () => {
-		const { nodes, selectedNodeId } = get();
-		return nodes.find((node) => node.id === selectedNodeId);
-	},
+    set((state) => ({
+      nodes: [...state.nodes, copiedNode],
+      isDirty: true,
+    }));
+    get().triggerAutoSave();
+  },
 
-	// Event ID
-	setEvent: (event) => set({ event }),
+  updateNodeData: (nodeId, data) => {
+    set((state) => ({
+      nodes: state.nodes.map((node) =>
+        node.id === nodeId ? { ...node, data: { ...node.data, ...data } } : node
+      ),
+      isDirty: true,
+    }));
+    get().triggerAutoSave();
+  },
 
-	setError: (errorMessage: string | null) => set({ error: errorMessage }),
+  setNodeData: (nodeId, data) => {
+    set((state) => ({
+      nodes: state.nodes.map((node) =>
+        node.id === nodeId
+          ? { ...node, data: data as Record<string, unknown> }
+          : node
+      ),
+      isDirty: true,
+    }));
+    get().triggerAutoSave();
+  },
 
-	triggerAutoSave: () => {
-		// Clear existing timeout
-		if (autoSaveTimeout) {
-			clearTimeout(autoSaveTimeout);
-		}
+  selectNode: (nodeId) => set({ selectedNodeId: nodeId }),
 
-		// Set new timeout
-		autoSaveTimeout = setTimeout(() => {
-			const state = get();
-			if (state.isDirty && !state.isSaving) {
-				state.saveToBackend();
-			}
-		}, AUTO_SAVE_DELAY);
-	},
+  getSelectedNode: () => {
+    const { nodes, selectedNodeId } = get();
+    return nodes.find((node) => node.id === selectedNodeId);
+  },
 
-	saveToBackend: async () => {
-		const { event, nodes, edges, isDirty } = get();
+  // Event ID
+  setEvent: (event) => set({ event }),
 
-		if (!isDirty) return;
+  setError: (errorMessage: string | null) => set({ error: errorMessage }),
 
-		set({ isSaving: true });
-		set({ error: null });
+  triggerAutoSave: () => {
+    // Clear existing timeout
+    if (autoSaveTimeout) {
+      clearTimeout(autoSaveTimeout);
+    }
 
-		// Validate workflow connection
-		const connected = validateWorkflowConnection(
-			edges,
-			"start-node",
-			"end-node",
-		);
+    // Set new timeout
+    autoSaveTimeout = setTimeout(() => {
+      const state = get();
+      if (state.isDirty && !state.isSaving) {
+        state.saveToBackend();
+      }
+    }, AUTO_SAVE_DELAY);
+  },
 
-		if (!connected) {
-			set({
-				isSaving: false,
-				error: "Workflow is not fully connected from start to end node.",
-			});
-			return;
-		}
+  saveToBackend: async () => {
+    const { event, nodes, edges, isDirty } = get();
 
-		// Create schema for saving
+    if (!isDirty) {
+      return;
+    }
 
-		try {
-			// API call to save workflow
-			const response = await fetch(`/api/workflows/${event}`, {
-				method: "PUT",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ nodes, edges }),
-			});
+    set({ isSaving: true });
+    set({ error: null });
 
-			if (!response.ok) {
-				throw new Error("Failed to save workflow");
-			}
+    // Validate workflow connection
+    const connected = validateWorkflowConnection(
+      edges,
+      "start-node",
+      "end-node"
+    );
 
-			set({
-				isDirty: false,
-				isSaving: false,
-				lastSaved: new Date(),
-			});
+    if (!connected) {
+      set({
+        isSaving: false,
+        error: "Workflow is not fully connected from start to end node.",
+      });
+      return;
+    }
 
-			console.log("✅ Workflow auto-saved");
-		} catch (error) {
-			console.error("❌ Auto-save failed:", error);
-			set({ isSaving: false });
-		}
-	},
+    // Create schema for saving
+
+    try {
+      // API call to save workflow
+      const response = await fetch(`/api/workflows/${event}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nodes, edges }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save workflow");
+      }
+
+      set({
+        isDirty: false,
+        isSaving: false,
+        lastSaved: new Date(),
+      });
+
+      console.log("✅ Workflow auto-saved");
+    } catch (error) {
+      console.error("❌ Auto-save failed:", error);
+      set({ isSaving: false });
+    }
+  },
 }));
 
 if (typeof window !== "undefined") {
-	window.addEventListener("beforeunload", () => {
-		if (autoSaveTimeout) {
-			clearTimeout(autoSaveTimeout);
-		}
-	});
+  window.addEventListener("beforeunload", () => {
+    if (autoSaveTimeout) {
+      clearTimeout(autoSaveTimeout);
+    }
+  });
 }

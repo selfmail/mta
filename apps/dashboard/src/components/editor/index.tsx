@@ -76,6 +76,7 @@ function WorkflowEditorInner({
     onNodesChange,
     onEdgesChange,
     setEvent,
+    selectNode,
     addNode,
   } = useFlowStore();
 
@@ -86,7 +87,7 @@ function WorkflowEditorInner({
     setEvent(event);
   }, [event, setEvent]);
 
-  // Fetching default nodes and edges from db
+  // TODO:  Fetching default nodes and edges from db
 
   const rfInstance = useReactFlow();
 
@@ -228,8 +229,13 @@ function WorkflowEditorInner({
           onDrop={onDrop}
           onEdgesChange={onEdgesChange}
           onNodesChange={onNodesChange}
-          onSelectionChange={({ nodes }) => {
-            console.log("Selected nodes:", nodes);
+          onSelectionChange={({ nodes, edges }) => {
+            if (nodes.length === 1 && edges.length === 0) {
+              selectNode(nodes[0].id);
+              console.log("Selected node:", nodes[0]);
+              return;
+            }
+            selectNode(null);
           }}
         >
           <Background />

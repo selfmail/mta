@@ -6,18 +6,21 @@ import { cn } from "@/lib/utils";
 
 interface BanNodeProps extends NodeProps {
   id: string;
+  selected: boolean;
 }
 
-export default function BanNode({ id }: BanNodeProps) {
-  const { selectNode, selectedNodeId, removeNode } = useFlowStore();
-  const isSelected = selectedNodeId === id;
+export default function BanNode({ id, selected }: BanNodeProps) {
+  const { removeNode } = useFlowStore();
 
-  // biome-ignore lint: we don't need the last dep
+  const handleDelete = () => {
+    removeNode(id);
+  };
+
   useEffect(() => {
-    if (isSelected) {
+    if (selected) {
       const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === "Escape") {
-          selectNode(null);
+        if (e.key === "Delete" || e.key === "Backspace") {
+          handleDelete();
         }
       };
       window.addEventListener("keydown", handleKeyDown);
@@ -25,17 +28,7 @@ export default function BanNode({ id }: BanNodeProps) {
         window.removeEventListener("keydown", handleKeyDown);
       };
     }
-    return () => {
-      if (selectedNodeId === id) {
-        selectNode(null);
-      }
-    };
-  }, [isSelected, id, selectNode]);
-
-  const handleDelete = () => {
-    removeNode(id);
-    selectNode(null);
-  };
+  }, [selected]);
 
   return (
     <>
@@ -45,7 +38,7 @@ export default function BanNode({ id }: BanNodeProps) {
         position={Position.Top}
         type="target"
       />
-      <NodeToolbar align="start" isVisible={isSelected} position={Position.Top}>
+      <NodeToolbar align="start" isVisible={selected} position={Position.Top}>
         <div className="flex flex-row space-x-2 rounded-md border border-(--border) bg-white p-1">
           <button
             className="rounded-sm p-2 transition-colors hover:bg-neutral-100"
@@ -56,24 +49,11 @@ export default function BanNode({ id }: BanNodeProps) {
           </button>
         </div>
       </NodeToolbar>
-      <button
+      <div
         className={cn(
-          "w-32 cursor-pointer border border-b-2 bg-white text-left text-xs shadow-sm transition-all",
-          isSelected
-            ? "border-red-500 shadow-[0_0_0_1px_rgba(239,68,68,0.3)]"
-            : "border-neutral-200"
+          "w-32 border border-b-2 bg-white text-left text-xs transition-all",
+          selected ? "border-red-500" : "border-neutral-200"
         )}
-        onClick={(e) => {
-          e.stopPropagation();
-          selectNode(id);
-        }}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            selectNode(id);
-          }
-        }}
-        tabIndex={0}
-        type="button"
       >
         <div className="flex flex-row items-center gap-2 p-2">
           <div className="flex h-6 w-6 items-center justify-center bg-red-100">
@@ -81,7 +61,7 @@ export default function BanNode({ id }: BanNodeProps) {
           </div>
           <span className="font-medium text-neutral-900">Banned</span>
         </div>
-      </button>
+      </div>
     </>
   );
 }

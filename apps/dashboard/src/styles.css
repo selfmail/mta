@@ -6,61 +6,61 @@
 @plugin "@toolwind/corner-shape";
 
 html {
-	overscroll-behavior: none;
+  overscroll-behavior: none;
 }
 
 * {
-	box-sizing: border-box;
-	font-family: "DM Sans", sans-serif;
+  box-sizing: border-box;
+  font-family: "DM Sans", sans-serif;
 }
 .root {
-	isolation: isolate;
+  isolation: isolate;
 }
 
 :root {
-	--background: #ffffff;
-	--background-content: #f5f5f5;
-	--text-primary: #1e1e1e;
-	--text-secondary: #6b6b6b;
+  --background: #ffffff;
+  --background-content: #f5f5f5;
+  --text-primary: #1e1e1e;
+  --text-secondary: #6b6b6b;
 
-	--border: #e0e0e0;
-	--border-hover: #c6c6c6;
+  --border: #e0e0e0;
+  --border-hover: #c6c6c6;
 
-	--shadow-sm: rgba(0, 0, 0, 0.05);
-	--shadow-md: rgba(0, 0, 0, 0.1);
-	--shadow-lg: rgba(0, 0, 0, 0.15);
+  --shadow-sm: rgba(0, 0, 0, 0.05);
+  --shadow-md: rgba(0, 0, 0, 0.1);
+  --shadow-lg: rgba(0, 0, 0, 0.15);
 }
 
 body {
-	position: relative;
-	margin: 0;
-	padding: 0;
-	background-color: var(--background);
-	color: var(--text-primary);
+  position: relative;
+  margin: 0;
+  padding: 0;
+  background-color: var(--background);
+  color: var(--text-primary);
 }
 a {
-	color: inherit;
-	text-decoration: none;
+  color: inherit;
+  text-decoration: none;
 }
 
 main,
 aside,
 header,
 footer {
-	display: block;
-	background-color: var(--background-content);
+  display: block;
+  background-color: var(--background-content);
 }
 
 .animation-rotation {
-	animation: rotation 150ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: rotation 150ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 @keyframes rotation {
-	from {
-		transform: translate(-50%, -50%) rotate(-3deg) scale(0.9);
-		opacity: 0;
-	}
-	to {
-		transform: translate(-50%, -50%) rotate(2deg) scale(1.05);
-		opacity: 0.95;
-	}
+  from {
+    transform: translate(-50%, -50%) rotate(-3deg) scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(2deg) scale(1.05);
+    opacity: 0.95;
+  }
 }

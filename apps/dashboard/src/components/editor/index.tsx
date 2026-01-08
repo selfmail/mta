@@ -4,6 +4,7 @@ import {
   type Connection,
   type Edge,
   type Node,
+  type NodeProps,
   type NodeTypes,
   type OnConnect,
   ReactFlow,
@@ -25,7 +26,7 @@ export interface WorkflowEditorProps {
     type: string;
     label: string;
     icon?: React.ReactNode;
-    component: React.ComponentType<any>;
+    component: React.ComponentType<NodeProps>;
   }>;
   /**
    * Starting node configuration
@@ -33,7 +34,7 @@ export interface WorkflowEditorProps {
   startNode: {
     type: string;
     label: string;
-    component: React.ComponentType<any>;
+    component: React.ComponentType<NodeProps>;
   };
   /**
    * End node configuration
@@ -41,7 +42,7 @@ export interface WorkflowEditorProps {
   endNode: {
     type: string;
     label: string;
-    component: React.ComponentType<any>;
+    component: React.ComponentType<NodeProps>;
   };
   /**
    * Callback function when the workflow is saved
@@ -76,7 +77,6 @@ function WorkflowEditorInner({
     onEdgesChange,
     setEvent,
     addNode,
-    selectNode,
   } = useFlowStore();
 
   const { drag, endDrag } = useNodeDnD();
@@ -116,9 +116,9 @@ function WorkflowEditorInner({
     const types: NodeTypes = {};
 
     // Add allowed nodes
-    allowedNodes.forEach((node) => {
+    for (const node of allowedNodes) {
       types[node.type] = node.component;
-    });
+    }
 
     // Add start and end nodes
     types[startNode.type] = startNode.component;
@@ -134,10 +134,6 @@ function WorkflowEditorInner({
     },
     [edges, setEdges]
   );
-
-  const onPaneClick = useCallback(() => {
-    selectNode(null);
-  }, [selectNode]);
 
   // Handle custom drag & drop
   const onCanvasPointerUp = useCallback(
@@ -232,7 +228,9 @@ function WorkflowEditorInner({
           onDrop={onDrop}
           onEdgesChange={onEdgesChange}
           onNodesChange={onNodesChange}
-          onPaneClick={onPaneClick}
+          onSelectionChange={({ nodes }) => {
+            console.log("Selected nodes:", nodes);
+          }}
         >
           <Background />
         </ReactFlow>

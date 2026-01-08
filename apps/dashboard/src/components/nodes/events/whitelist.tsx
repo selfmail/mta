@@ -6,25 +6,24 @@ import { cn } from "@/lib/utils";
 
 interface WhitelistProps extends NodeProps {
   id: string;
+  selected?: boolean;
 }
 
-export default function WhitelistNode({ id }: WhitelistProps) {
-  const { selectNode, selectedNodeId, removeNode } = useFlowStore();
-  const isSelected = selectedNodeId === id;
+export default function WhitelistNode({
+  id,
+  selected = false,
+}: WhitelistProps) {
+  const { removeNode } = useFlowStore();
 
   const handleDelete = () => {
     removeNode(id);
-    selectNode(null);
   };
 
   useEffect(() => {
-    if (isSelected) {
-      // Watch for delete keyboard input and esc to deselect
+    if (selected) {
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === "Delete" || e.key === "Backspace") {
           handleDelete();
-        } else if (e.key === "Escape") {
-          selectNode(null);
         }
       };
       window.addEventListener("keydown", handleKeyDown);
@@ -32,13 +31,7 @@ export default function WhitelistNode({ id }: WhitelistProps) {
         window.removeEventListener("keydown", handleKeyDown);
       };
     }
-    // Deselect node when unmounting
-    return () => {
-      if (selectedNodeId === id) {
-        selectNode(null);
-      }
-    };
-  });
+  }, [selected]);
 
   return (
     <>
@@ -47,7 +40,7 @@ export default function WhitelistNode({ id }: WhitelistProps) {
         position={Position.Top}
         type="target"
       />
-      <NodeToolbar align="start" isVisible={isSelected} position={Position.Top}>
+      <NodeToolbar align="start" isVisible={selected} position={Position.Top}>
         <div className="flex flex-row space-x-2 rounded-md border border-(--border) bg-white p-1">
           <button
             className="rounded-sm p-2 transition-colors hover:bg-neutral-100"
@@ -65,24 +58,13 @@ export default function WhitelistNode({ id }: WhitelistProps) {
           </button>
         </div>
       </NodeToolbar>
-      <button
+      <div
         className={cn(
-          "w-32 cursor-pointer border border-b-2 bg-white text-left text-xs shadow-sm transition-all",
-          isSelected
+          "w-32 border border-b-2 bg-white text-left text-xs shadow-sm transition-all",
+          selected
             ? "border-purple-500 shadow-[0_0_0_1px_rgba(168,85,247,0.3)]"
             : "border-neutral-200"
         )}
-        onClick={(e) => {
-          e.stopPropagation();
-          selectNode(id);
-        }}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            selectNode(id);
-          }
-        }}
-        tabIndex={0}
-        type="button"
       >
         <div className="flex flex-row items-center gap-2 p-2">
           <div className="flex h-6 w-6 items-center justify-center bg-purple-100">
@@ -90,7 +72,7 @@ export default function WhitelistNode({ id }: WhitelistProps) {
           </div>
           <span className="font-medium text-neutral-900">Whitelist</span>
         </div>
-      </button>
+      </div>
       <Handle
         className="size-2! rounded-none! border-none! bg-purple-500!"
         position={Position.Bottom}

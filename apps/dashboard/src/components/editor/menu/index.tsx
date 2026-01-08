@@ -3,7 +3,7 @@ import BanMenuPreview from "../menu-previews/ban";
 import WhitelistMenuPreview from "../menu-previews/whitelist";
 import { useFlowStore } from "../store";
 import { useNodeDnD } from "../useNodeDnD";
-import WhitelistMenu from "./whitelist-menu";
+import WhitelistConnectionMenu from "./settings/whitelist-connection-menu";
 
 interface MenuNode {
   type: string;
@@ -13,7 +13,7 @@ interface MenuNode {
 
 export const nodeTypes: MenuNode[] = [
   {
-    type: "whitelist",
+    type: "whitelist-connection",
     name: "Whitelist",
     preview: WhitelistMenuPreview,
   },
@@ -30,7 +30,7 @@ export const nodeTypes: MenuNode[] = [
 ];
 
 const settingMenus: Record<string, React.ComponentType> = {
-  whitelist: WhitelistMenu,
+  "whitelist-connection": WhitelistConnectionMenu,
 };
 
 export default function RightSideMenu() {

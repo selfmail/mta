@@ -3,7 +3,7 @@ import { Globe, ShieldCheck } from "lucide-react";
 import WorkflowEditor from "@/components/editor";
 import ApiCallNode from "@/components/nodes/actions/api-call";
 import EndNode from "@/components/nodes/end";
-import WhitelistNode from "@/components/nodes/events/whitelist";
+import WhitelistConnectionNode from "@/components/nodes/events/connection/whitelist-connection";
 import BanNode from "@/components/nodes/fails/ban";
 import StartNode from "@/components/nodes/start";
 
@@ -16,10 +16,10 @@ function ConnectionEventEditor() {
     <WorkflowEditor
       allowedNodes={[
         {
-          type: "whitelist",
+          type: "whitelist-connection",
           label: "Whitelist",
           icon: <ShieldCheck className="h-4 w-4" />,
-          component: WhitelistNode,
+          component: WhitelistConnectionNode,
         },
         {
           type: "ban",

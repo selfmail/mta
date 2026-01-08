@@ -1,11 +1,11 @@
 import { Input as InputElement } from "@base-ui/react";
 export default function Input(
-	props: React.InputHTMLAttributes<HTMLInputElement>,
+  props: React.InputHTMLAttributes<HTMLInputElement>
 ) {
-	return (
-		<InputElement
-			{...props}
-			className="rounded-xl w-full  px-3 py-2 outline-none border border-neutral-800 bg-neutral-900 text-neutral-100"
-		/>
-	);
+  return (
+    <InputElement
+      {...props}
+      className="w-full rounded-xl border border-neutral-200 bg-neutral-100 p-1.5 outline-none ring-neutral-100 transition-all focus-visible:ring-2"
+    />
+  );
 }

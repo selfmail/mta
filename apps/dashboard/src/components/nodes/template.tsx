@@ -1,7 +1,7 @@
 import { Handle, type NodeProps, NodeToolbar, Position } from "@xyflow/react";
 import type { LucideIcon } from "lucide-react";
 import { CopyIcon, Trash2 } from "lucide-react";
-import { type ReactNode, useEffect } from "react";
+import type { ReactNode } from "react";
 import { useFlowStore } from "@/components/editor/store";
 import { cn } from "@/lib/utils";
 
@@ -133,23 +133,6 @@ export default function TemplateNode({
   const handleCopy = () => {
     copyNode(id);
   };
-
-  // biome-ignore lint: don't want to have an infinite rerender loop
-  useEffect(() => {
-    if (selected) {
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === "Delete" || e.key === "Backspace") {
-          handleDelete();
-        } else if (e.key === "Escape") {
-          selectNode(null);
-        }
-      };
-      window.addEventListener("keydown", handleKeyDown);
-      return () => {
-        window.removeEventListener("keydown", handleKeyDown);
-      };
-    }
-  }, [selected, selectNode]);
 
   return (
     <>

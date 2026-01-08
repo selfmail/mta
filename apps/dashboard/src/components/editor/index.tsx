@@ -1,62 +1,18 @@
 import {
-  addEdge,
   Background,
-  type Connection,
-  type Edge,
-  type Node,
-  type NodeProps,
   type NodeTypes,
-  type OnConnect,
   ReactFlow,
   ReactFlowProvider,
   useReactFlow,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import { useEditorConnection, useEditorDragAndDrop } from "./hooks";
 import RightSideMenu from "./menu";
 import { useFlowStore } from "./store";
+import type { WorkflowEditorProps } from "./types";
 import { NodeDnDProvider, useNodeDnD } from "./useNodeDnD";
-import { createInitialNodes } from "./utils";
-export interface WorkflowEditorProps {
-  event: string;
-  /**
-   * Array of allowed node types for this workflow
-   */
-  allowedNodes: Array<{
-    type: string;
-    label: string;
-    icon?: React.ReactNode;
-    component: React.ComponentType<NodeProps>;
-  }>;
-  /**
-   * Starting node configuration
-   */
-  startNode: {
-    type: string;
-    label: string;
-    component: React.ComponentType<NodeProps>;
-  };
-  /**
-   * End node configuration
-   */
-  endNode: {
-    type: string;
-    label: string;
-    component: React.ComponentType<NodeProps>;
-  };
-  /**
-   * Callback function when the workflow is saved
-   */
-  onSave?: (nodes: Node[], edges: Edge[]) => void | Promise<void>;
-  /**
-   * Initial nodes (optional)
-   */
-  initialNodes?: Node[];
-  /**
-   * Initial edges (optional)
-   */
-  initialEdges?: Edge[];
-}
+import { buildNodeTypes, createInitialNodes } from "./utils";
 
 // TODO: integrate Minimap and Controls
 function WorkflowEditorInner({
@@ -77,19 +33,27 @@ function WorkflowEditorInner({
     onEdgesChange,
     setEvent,
     selectNode,
-    addNode,
   } = useFlowStore();
 
   const { drag, endDrag } = useNodeDnD();
-  const reactFlowWrapper = useRef<HTMLDivElement>(null);
+  // biome-ignore lint/style/noNonNullAssertion: will always be set
+  const reactFlowWrapper = useRef<HTMLDivElement>(null!);
+  const rfInstance = useReactFlow();
+
+  // Custom hooks for cleaner code
+  const { onConnect } = useEditorConnection();
+  const { onCanvasPointerUp, onDragOver, onDrop } = useEditorDragAndDrop(
+    drag,
+    endDrag,
+    rfInstance,
+    reactFlowWrapper
+  );
 
   useEffect(() => {
     setEvent(event);
   }, [event, setEvent]);
 
-  // TODO:  Fetching default nodes and edges from db
-
-  const rfInstance = useReactFlow();
+  // TODO: Fetching default nodes and edges from db
 
   // Initialising default nodes
   // biome-ignore lint: don't need these deps
@@ -113,100 +77,11 @@ function WorkflowEditorInner({
   }, []);
 
   // Build node types from allowed nodes, start node, and end node
-  const nodeTypes: NodeTypes = useMemo(() => {
-    const types: NodeTypes = {};
-
-    // Add allowed nodes
-    for (const node of allowedNodes) {
-      types[node.type] = node.component;
-    }
-
-    // Add start and end nodes
-    types[startNode.type] = startNode.component;
-    types[endNode.type] = endNode.component;
-
-    return types;
-  }, [allowedNodes, startNode, endNode]);
-
-  const onConnect: OnConnect = useCallback(
-    (connection: Connection) => {
-      const newEdges = addEdge(connection, edges);
-      setEdges(newEdges);
-    },
-    [edges, setEdges]
+  const nodeTypes: NodeTypes = useMemo(
+    () => buildNodeTypes(allowedNodes, startNode, endNode),
+    [allowedNodes, startNode, endNode]
   );
 
-  // Handle custom drag & drop
-  const onCanvasPointerUp = useCallback(
-    (event: React.PointerEvent) => {
-      if (!(drag && rfInstance && reactFlowWrapper.current)) {
-        return;
-      }
-
-      const bounds = reactFlowWrapper.current.getBoundingClientRect();
-      const position = rfInstance.screenToFlowPosition({
-        x: event.clientX - bounds.left,
-        y: event.clientY - bounds.top,
-      });
-
-      const newNode: Node = {
-        id: crypto.randomUUID(),
-        type: drag.type,
-        position,
-        data: { label: drag.label },
-      };
-
-      addNode(newNode);
-      endDrag();
-    },
-    [drag, rfInstance, addNode, endDrag]
-  );
-
-  const onDragOver = (event: React.DragEvent) => {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
-  };
-
-  const onDrop = (event: React.DragEvent) => {
-    event.preventDefault();
-
-    if (!rfInstance) {
-      return;
-    }
-
-    const type = event.dataTransfer.getData("application/reactflow");
-    if (!type) {
-      return;
-    }
-
-    // Get drag offset data to position the node relative to where the user grabbed it
-    const offsetData = event.dataTransfer.getData(
-      "application/reactflow-offset"
-    );
-    let offsetX = 0;
-    let offsetY = 0;
-
-    if (offsetData) {
-      const offset = JSON.parse(offsetData);
-      // Center the node by using half the width/height
-      offsetX = offset.width / 2;
-      offsetY = offset.height / 2;
-    }
-
-    const position = rfInstance.screenToFlowPosition({
-      x: event.clientX - offsetX,
-      y: event.clientY - offsetY,
-    });
-
-    const newNode: Node = {
-      id: crypto.randomUUID(),
-      type,
-      position,
-      data: { label: `${type} node` },
-    };
-
-    addNode(newNode);
-  };
   return (
     <div className="flex h-full w-full">
       <div
@@ -231,8 +106,12 @@ function WorkflowEditorInner({
           onNodesChange={onNodesChange}
           onSelectionChange={({ nodes, edges }) => {
             if (nodes.length === 1 && edges.length === 0) {
+              if (nodes[0].id === "start-node" || nodes[0].id === "end-node") {
+                selectNode(null);
+                return;
+              }
+
               selectNode(nodes[0].id);
-              console.log("Selected node:", nodes[0]);
               return;
             }
             selectNode(null);

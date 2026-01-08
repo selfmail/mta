@@ -1,5 +1,28 @@
 import type { DataSchemaTS } from "@mta/schema";
-import type { Edge, Node } from "@xyflow/react";
+import type { Edge, Node, NodeTypes } from "@xyflow/react";
+import type { WorkflowEditorProps } from "./types";
+
+/**
+ * Builds the node types object from allowed nodes, start node, and end node
+ */
+export function buildNodeTypes(
+  allowedNodes: WorkflowEditorProps["allowedNodes"],
+  startNode: WorkflowEditorProps["startNode"],
+  endNode: WorkflowEditorProps["endNode"]
+): NodeTypes {
+  const types: NodeTypes = {};
+
+  // Add allowed nodes
+  for (const node of allowedNodes) {
+    types[node.type] = node.component;
+  }
+
+  // Add start and end nodes
+  types[startNode.type] = startNode.component;
+  types[endNode.type] = endNode.component;
+
+  return types;
+}
 
 /**
  * Validates that there is a path from the start node to the end node

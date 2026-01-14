@@ -91,7 +91,99 @@ export function createInitialNodes(
   ];
 }
 
-// TODO: Implement function to create data schema from nodes and edges
-export function createDataSchema(nodes: Node[], edges: Edge[]): DataSchemaTS {
-  // Go through nodes and edges, create data schema
+/**
+ * Creates a DataSchemaTS object from nodes and edges
+ * Filters out start and end nodes and transforms workflow nodes into data schema items
+ */
+export function createDataSchema(
+  nodes: Node[],
+  edges: Edge[],
+  event: DataSchemaTS["event"]
+): DataSchemaTS {
+  // Filter out start and end nodes - only include workflow action nodes
+  const workflowNodes = nodes.filter(
+    (node) => node.id !== "start-node" && node.id !== "end-node"
+  );
+
+  // Sort nodes based on their execution order using edges
+  const sortedNodes = topologicalSort(workflowNodes, edges);
+
+  // Transform nodes into data schema items
+  const data = sortedNodes.map((node) => ({
+    id: node.id,
+    type: node.type,
+    payload: (node.data || {}) as Record<string, unknown>,
+    proceedAtError: (node.data?.proceedAtError as boolean | undefined) ?? false,
+    fail: node.data?.fail as DataSchemaTS["data"][number]["fail"],
+  }));
+
+  return {
+    event,
+    timestamp: new Date().toISOString(),
+    data,
+  };
+}
+
+/**
+ * Performs topological sort on nodes based on edges to determine execution order
+ * Uses Kahn's algorithm for topological sorting
+ */
+function topologicalSort(nodes: Node[], edges: Edge[]): Node[] {
+  const nodeMap = new Map(nodes.map((node) => [node.id, node]));
+  const inDegree = new Map<string, number>();
+  const adjacencyList = new Map<string, string[]>();
+
+  // Initialize in-degree and adjacency list
+  for (const node of nodes) {
+    inDegree.set(node.id, 0);
+    adjacencyList.set(node.id, []);
+  }
+
+  // Build graph
+  for (const edge of edges) {
+    // Only consider edges between workflow nodes (exclude start/end)
+    if (nodeMap.has(edge.source) && nodeMap.has(edge.target)) {
+      adjacencyList.get(edge.source)?.push(edge.target);
+      inDegree.set(edge.target, (inDegree.get(edge.target) || 0) + 1);
+    }
+  }
+
+  // Queue of nodes with no incoming edges
+  const queue: string[] = [];
+  for (const [nodeId, degree] of inDegree) {
+    if (degree === 0) {
+      queue.push(nodeId);
+    }
+  }
+
+  const sorted: Node[] = [];
+
+  while (queue.length > 0) {
+    // biome-ignore lint/style/noNonNullAssertion: queue length checked
+    const currentId = queue.shift()!;
+    const currentNode = nodeMap.get(currentId);
+
+    if (currentNode) {
+      sorted.push(currentNode);
+    }
+
+    // Reduce in-degree of neighbors
+    const neighbors = adjacencyList.get(currentId) || [];
+    for (const neighborId of neighbors) {
+      const newDegree = (inDegree.get(neighborId) || 0) - 1;
+      inDegree.set(neighborId, newDegree);
+
+      if (newDegree === 0) {
+        queue.push(neighborId);
+      }
+    }
+  }
+
+  // If not all nodes were sorted, there's a cycle or disconnected nodes
+  // Return nodes in their original order as fallback
+  if (sorted.length !== nodes.length) {
+    return nodes;
+  }
+
+  return sorted;
 }

@@ -115,7 +115,7 @@ export default function TemplateNode({
   color = "purple",
   handles,
 }: TemplateNodeProps) {
-  const { removeNode, selectNode, copyNode } = useFlowStore();
+  const { removeNode, copyNode } = useFlowStore();
   const scheme = colorSchemes[color];
 
   // Default handles if none provided

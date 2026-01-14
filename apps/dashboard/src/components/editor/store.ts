@@ -1,7 +1,8 @@
+import type { DataSchemaTS } from "@mta/schema";
 import type { Edge, EdgeChange, Node, NodeChange } from "@xyflow/react";
 import { applyEdgeChanges, applyNodeChanges } from "@xyflow/react";
 import { create } from "zustand";
-import { validateWorkflowConnection } from "./utils";
+import { createDataSchema, validateWorkflowConnection } from "./utils";
 
 export interface FlowState {
   event: string;
@@ -203,13 +204,18 @@ export const useFlowStore = create<FlowState>((set, get) => ({
     }
 
     // Create schema for saving
+    const dataSchema = createDataSchema(
+      nodes,
+      edges,
+      event as DataSchemaTS["event"]
+    );
 
     try {
       // API call to save workflow
       const response = await fetch(`/api/workflows/${event}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nodes, edges }),
+        body: JSON.stringify({ nodes, edges, schema: dataSchema }),
       });
 
       if (!response.ok) {

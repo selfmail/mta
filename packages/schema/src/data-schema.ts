@@ -21,20 +21,22 @@ export abstract class DataSchema {
       reason: z.string().optional(),
     }),
   };
+  static event = z.enum([
+    "inbound-connection",
+    "inbound-mail-from",
+    "inbound-rcpt-to",
+    "inbound-data",
+    "inbound-queue",
+    "outbound-connection",
+    "outbound-mail-from",
+    "outbound-rcpt-to",
+    "outbound-data",
+    "outbound-queue",
+    "relay",
+  ]);
   static schema = z.object({
-    event: z.enum([
-      "inbound-connection",
-      "inbound-mail-from",
-      "inbound-rcpt-to",
-      "inbound-data",
-      "inbound-queue",
-      "outbound-connection",
-      "outbound-mail-from",
-      "outbound-rcpt-to",
-      "outbound-data",
-      "outbound-queue",
-      "relay",
-    ]),
+    event: DataSchema.event,
+    version: z.string().regex(/^v[0-9]+\.[0-9]+\.[0-9]+$/),
     timestamp: z.string().refine((val) => !Number.isNaN(Date.parse(val)), {
       message: "Invalid timestamp format",
     }),
@@ -54,4 +56,4 @@ export abstract class DataSchema {
   }
 }
 
-export type DataSchemaTS = z.infer<typeof DataSchema>;
+export type DataSchemaTS = z.infer<typeof DataSchema.schema>;

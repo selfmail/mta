@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
+import { apiUrl } from "@/lib/api";
 
 export const useAuth = () =>
 	useQuery({
 		queryKey: ["auth"],
 		queryFn: async () => {
-			const response = await fetch("http://localhost:8080/users/me", {
+			const response = await fetch(apiUrl("/users/me"), {
 				credentials: "include",
 			});
 

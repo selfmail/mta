@@ -111,7 +111,7 @@ export function createDataSchema(
   // Transform nodes into data schema items
   const data = sortedNodes.map((node) => ({
     id: node.id,
-    type: node.type,
+    type: node.type ?? "unknown",
     payload: (node.data || {}) as Record<string, unknown>,
     proceedAtError: (node.data?.proceedAtError as boolean | undefined) ?? false,
     fail: node.data?.fail as DataSchemaTS["data"][number]["fail"],
@@ -119,6 +119,7 @@ export function createDataSchema(
 
   return {
     event,
+    version: "v1.0.0",
     timestamp: new Date().toISOString(),
     data,
   };

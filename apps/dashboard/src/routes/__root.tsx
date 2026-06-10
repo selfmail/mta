@@ -8,6 +8,7 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import TopBar from "@/components/layout/bar";
+import { apiUrl } from "@/lib/api";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 
 interface MyRouterContext {
@@ -26,7 +27,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 		// Check authentication for protected routes
 		try {
-			const response = await fetch("http://localhost:8080/users/me", {
+			const response = await fetch(apiUrl("/users/me"), {
 				credentials: "include",
 			});
 
@@ -65,9 +66,13 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 		return (
 			<>
-				<TopBar noPadding={noPadding}>
+				{showTopBar ? (
+					<TopBar noPadding={noPadding}>
+						<Outlet />
+					</TopBar>
+				) : (
 					<Outlet />
-				</TopBar>
+				)}
 				<TanStackDevtools
 					config={{
 						position: "bottom-right",

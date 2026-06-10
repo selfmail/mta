@@ -3,6 +3,7 @@ import { useState } from "react";
 import z from "zod";
 import Button from "@/components/base/button";
 import Input from "@/components/base/input";
+import { apiUrl } from "@/lib/api";
 
 export const Route = createFileRoute("/auth/register")({
 	component: RouteComponent,
@@ -50,7 +51,7 @@ function RouteComponent() {
 			}
 
 			// Fetch the api
-			const res = await fetch("http://localhost:8080/users", {
+			const res = await fetch(apiUrl("/users"), {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -66,7 +67,11 @@ function RouteComponent() {
 				const errorData = await res
 					.json()
 					.catch(() => ({ message: "Registration failed" }));
-				setError(errorData.message || "Registration failed. Please try again.");
+				setError(
+					errorData.error ||
+						errorData.message ||
+						"Registration failed. Please try again.",
+				);
 				return;
 			}
 

@@ -41,8 +41,17 @@ export const auth = new Elysia({
 	// Register a new user
 	.post(
 		"/",
-		async ({ body }) => {
-			return await AuthService.register(body.email, body.password, body.name);
+		async ({ body, set }) => {
+			try {
+				return await AuthService.register(body.email, body.password, body.name);
+			} catch (error) {
+				if (error instanceof Error && error.message === "User already exists") {
+					set.status = 409;
+					return { error: error.message };
+				}
+
+				throw error;
+			}
 		},
 		{
 			body: t.Object({
@@ -59,14 +68,40 @@ export const auth = new Elysia({
 	// Login
 	.post(
 		"/login",
-		async ({ body, cookie: { sessionToken } }) => {
-			const result = await AuthService.login(body.email, body.password);
+		async ({ body, cookie: { sessionToken }, set }) => {
+			let result;
+
+			try {
+				result = await AuthService.login(body.email, body.password);
+			} catch (error) {
+				if (
+					error instanceof Error &&
+					(error.message === "User not found" ||
+						error.message === "Invalid password")
+				) {
+					set.status = 401;
+					return { error: "Invalid email or password" };
+				}
+
+				throw error;
+			}
+
+			const sessionCookie = {
+				value: result.sessionId,
+				httpOnly: true,
+				path: "/",
+				maxAge: 60 * 60 * 24 * 7, // 7 days
+				sameSite: "lax",
+				secure: false,
+			} as const;
 
 			if (sessionToken) {
-				sessionToken.value = result.sessionId;
-				sessionToken.httpOnly = true;
-				sessionToken.path = "/";
-				sessionToken.maxAge = 60 * 60 * 24 * 7; // 7 days
+				sessionToken.set(sessionCookie);
+			} else {
+				set.cookie = {
+					...(set.cookie ?? {}),
+					sessionToken: sessionCookie,
+				};
 			}
 
 			return result;

@@ -3,6 +3,7 @@ import { useState } from "react";
 import z from "zod";
 import Button from "@/components/base/button";
 import Input from "@/components/base/input";
+import { apiUrl } from "@/lib/api";
 
 export const Route = createFileRoute("/auth/login")({
 	component: RouteComponent,
@@ -40,7 +41,7 @@ function RouteComponent() {
 			}
 
 			// Call login API
-			const res = await fetch("http://localhost:8080/users/login", {
+			const res = await fetch(apiUrl("/users/login"), {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -56,7 +57,7 @@ function RouteComponent() {
 				const errorData = await res
 					.json()
 					.catch(() => ({ message: "Login failed" }));
-				setError(errorData.message || "Invalid email or password");
+				setError(errorData.error || errorData.message || "Invalid email or password");
 				return;
 			}
 

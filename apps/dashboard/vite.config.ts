@@ -1,25 +1,31 @@
 import { defineConfig } from 'vite'
 import { devtools } from '@tanstack/devtools-vite'
+import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import viteReact from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
-import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import { fileURLToPath, URL } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  build: {
+    rollupOptions: {
+      external: [/^@prisma\/client(\/.*)?$/],
+    },
+  },
   plugins: [
-    devtools(),
-    tanstackRouter({
-      target: 'react',
-      autoCodeSplitting: true,
+    devtools({
+      eventBusConfig: {
+        enabled: false,
+      },
     }),
+    tailwindcss(),
+    tanstackStart(),
     viteReact({
       babel: {
         plugins: ['babel-plugin-react-compiler'],
       },
     }),
-    tailwindcss(),
   ],
   resolve: {
     alias: {

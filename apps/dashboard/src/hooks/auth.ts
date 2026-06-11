@@ -1,22 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { apiUrl } from "@/lib/api";
+import { authClient } from "@/lib/auth-client";
 
 export const useAuth = () =>
 	useQuery({
 		queryKey: ["auth"],
 		queryFn: async () => {
-			const response = await fetch(apiUrl("/users/me"), {
-				credentials: "include",
-			});
+			const { data, error } = await authClient.getSession();
 
-			if (!response.ok) {
-				throw new Error("Not authenticated");
-			}
-
-			const data = await response.json();
-
-			if (data.error) {
-				throw new Error(data.error);
+			if (error || !data) {
+				throw new Error(error?.message ?? "Not authenticated");
 			}
 
 			return data;

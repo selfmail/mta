@@ -3,7 +3,7 @@ import { useState } from "react";
 import z from "zod";
 import Button from "@/components/base/button";
 import Input from "@/components/base/input";
-import { apiUrl } from "@/lib/api";
+import { authClient } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/auth/login")({
 	component: RouteComponent,
@@ -40,24 +40,13 @@ function RouteComponent() {
 				return;
 			}
 
-			// Call login API
-			const res = await fetch(apiUrl("/users/login"), {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({
-					email: data.email,
-					password: data.password,
-				}),
+			const result = await authClient.signIn.email({
+				email: data.email,
+				password: data.password,
 			});
 
-			if (!res.ok) {
-				const errorData = await res
-					.json()
-					.catch(() => ({ message: "Login failed" }));
-				setError(errorData.error || errorData.message || "Invalid email or password");
+			if (result.error) {
+				setError(result.error.message || "Invalid email or password");
 				return;
 			}
 
